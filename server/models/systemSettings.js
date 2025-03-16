@@ -248,6 +248,7 @@ const SystemSettings = {
       // Eleven Labs TTS
       TTSElevenLabsKey: !!process.env.TTS_ELEVEN_LABS_KEY,
       TTSElevenLabsVoiceModel: process.env.TTS_ELEVEN_LABS_VOICE_MODEL,
+      TTSElevenLabsModel: process.env.TTS_ELEVEN_LABS_MODEL || "eleven_multilingual_v2",
       // Piper TTS
       TTSPiperTTSVoiceModel:
         process.env.TTS_PIPER_VOICE_MODEL ?? "en_US-hfc_female-medium",

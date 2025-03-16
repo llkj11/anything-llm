@@ -542,6 +542,10 @@ const KEY_MAPPING = {
     envKey: "TTS_ELEVEN_LABS_VOICE_MODEL",
     checks: [],
   },
+  TTSElevenLabsModel: {
+    envKey: "TTS_ELEVEN_LABS_MODEL",
+    checks: [],
+  },
 
   // PiperTTS Local
   TTSPiperTTSVoiceModel: {

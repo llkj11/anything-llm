@@ -752,6 +752,8 @@ const TRANSLATIONS = {
     agents: "View all available agents you can use for chatting.",
     text_size: "Change text size.",
     microphone: "Speak your prompt.",
+    select_voice: "Select voice for text-to-speech",
+    loading_voices: "Loading available voices...",
     send: "Send prompt message to workspace",
   },
 

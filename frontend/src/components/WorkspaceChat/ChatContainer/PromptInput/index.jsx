@@ -12,12 +12,14 @@ import AvailableAgentsButton, {
 } from "./AgentMenu";
 import TextSizeButton from "./TextSizeMenu";
 import SpeechToText from "./SpeechToText";
+import VoicesDropdown from "./VoicesDropdown";
 import { Tooltip } from "react-tooltip";
 import AttachmentManager from "./Attachments";
 import AttachItem from "./AttachItem";
 import { PASTE_ATTACHMENT_EVENT } from "../DnDWrapper";
 import useTextSize from "@/hooks/useTextSize";
 import { useTranslation } from "react-i18next";
+import System from "@/models/system";
 
 export const PROMPT_INPUT_EVENT = "set_prompt_input";
 const MAX_EDIT_STACK_SIZE = 100;
@@ -31,6 +33,9 @@ export default function PromptInput({
 }) {
   const { t } = useTranslation();
   const [promptInput, setPromptInput] = useState("");
+  const [ttsProvider, setTtsProvider] = useState("native");
+  const [ttsSettings, setTtsSettings] = useState({});
+  const [selectedVoice, setSelectedVoice] = useState("");
   const { showAgents, setShowAgents } = useAvailableAgents();
   const { showSlashCommand, setShowSlashCommand } = useSlashCommands();
   const formRef = useRef(null);
@@ -39,6 +44,21 @@ export default function PromptInput({
   const undoStack = useRef([]);
   const redoStack = useRef([]);
   const { textSizeClass } = useTextSize();
+
+  // Fetch TTS settings when the component mounts
+  useEffect(() => {
+    async function fetchTtsSettings() {
+      const settings = await System.keys();
+      if (settings) {
+        setTtsProvider(settings.TextToSpeechProvider || "native");
+        setTtsSettings(settings);
+        if (settings.TTSElevenLabsVoiceModel) {
+          setSelectedVoice(settings.TTSElevenLabsVoiceModel);
+        }
+      }
+    }
+    fetchTtsSettings();
+  }, []);
 
   /**
    * To prevent too many re-renders we remotely listen for updates from the parent
@@ -79,6 +99,13 @@ export default function PromptInput({
 
   function handleSubmit(e) {
     setFocused(false);
+    
+    // If we're using ElevenLabs TTS and have a selected voice, update the system setting
+    if (ttsProvider === "elevenlabs" && selectedVoice) {
+      // We don't await this because we don't want to block the submission
+      System.updateSystem({ TTSElevenLabsVoiceModel: selectedVoice });
+    }
+    
     submit(e);
   }
 
@@ -312,6 +339,13 @@ export default function PromptInput({
                 <TextSizeButton />
               </div>
               <div className="flex gap-x-2">
+                {ttsProvider === "elevenlabs" && ttsSettings?.TTSElevenLabsKey && (
+                  <VoicesDropdown
+                    selectedVoice={selectedVoice}
+                    onSelectVoice={setSelectedVoice}
+                    apiKey={ttsSettings.TTSElevenLabsKey}
+                  />
+                )}
                 <SpeechToText sendCommand={sendCommand} />
               </div>
             </div>

@@ -467,6 +467,9 @@ function systemEndpoints(app) {
           false,
           response?.locals?.user?.id
         );
+        if (typeof body.TTSElevenLabsModel !== "undefined") {
+          newValues.TTSElevenLabsModel = body.TTSElevenLabsModel;
+        }
         response.status(200).json({ newValues, error });
       } catch (e) {
         console.error(e.message, e);

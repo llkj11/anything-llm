@@ -18,12 +18,20 @@ function useIsAuthenticated() {
 
   useEffect(() => {
     const validateSession = async () => {
+      const systemKeys = await System.keys();
+      
+      // Add null check to prevent destructuring a null value
+      if (!systemKeys) {
+        setIsAuthed(false);
+        return;
+      }
+
       const {
         MultiUserMode,
         RequiresAuth,
         LLMProvider = null,
         VectorDB = null,
-      } = await System.keys();
+      } = systemKeys;
 
       setMultiUserMode(MultiUserMode);
 

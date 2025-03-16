@@ -12,7 +12,7 @@ class ElevenLabsTTS {
     // https://api.elevenlabs.io/v1/voices
     this.voiceId =
       process.env.TTS_ELEVEN_LABS_VOICE_MODEL ?? "21m00Tcm4TlvDq8ikWAM";
-    this.modelId = "eleven_multilingual_v2";
+    this.modelId = process.env.TTS_ELEVEN_LABS_MODEL ?? "eleven_multilingual_v2";
   }
 
   static async voices(apiKey = null) {
@@ -39,7 +39,7 @@ class ElevenLabsTTS {
       const audio = await this.elevenLabs.generate({
         voice: this.voiceId,
         text: textInput,
-        model_id: "eleven_multilingual_v2",
+        model_id: this.modelId,
       });
       return Buffer.from(await this.#stream2buffer(audio));
     } catch (e) {

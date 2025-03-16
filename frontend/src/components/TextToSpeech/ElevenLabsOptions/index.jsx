@@ -27,7 +27,27 @@ export default function ElevenLabsOptions({ settings }) {
         />
       </div>
       {!settings?.credentialsOnly && (
-        <ElevenLabsModelSelection settings={settings} apiKey={elevenLabsKey} />
+        <>
+          <div className="flex flex-col w-60">
+            <label className="text-white text-sm font-semibold block mb-3">
+              Models
+            </label>
+            <select
+              name="TTSElevenLabsModel"
+              required={true}
+              className="border-none bg-theme-settings-input-bg border-gray-500 text-white text-sm rounded-lg block w-full p-2.5"
+              defaultValue={settings?.TTSElevenLabsModel || "eleven_multilingual_v2"}
+            >
+              <option value="eleven_multilingual_v2">
+                Multilingual v2 (High Quality)
+              </option>
+              <option value="eleven_flash_v2_5">
+                Flash v2.5 (Fast, Low Latency)
+              </option>
+            </select>
+          </div>
+          <ElevenLabsModelSelection settings={settings} apiKey={elevenLabsKey} />
+        </>
       )}
     </div>
   );
@@ -63,7 +83,7 @@ function ElevenLabsModelSelection({ apiKey, settings }) {
     return (
       <div className="flex flex-col w-60">
         <label className="text-white text-sm font-semibold block mb-3">
-          Chat Model Selection
+          Voice Selection
         </label>
         <select
           name="TTSElevenLabsVoiceModel"
@@ -81,7 +101,7 @@ function ElevenLabsModelSelection({ apiKey, settings }) {
   return (
     <div className="flex flex-col w-60">
       <label className="text-white text-sm font-semibold block mb-3">
-        Chat Model Selection
+        Voice Selection
       </label>
       <select
         name="TTSElevenLabsVoiceModel"
