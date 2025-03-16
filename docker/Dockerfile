@@ -133,6 +133,9 @@ WORKDIR /app
 FROM build AS backend-build
 COPY ./server /app/server/
 WORKDIR /app/server
+USER root
+RUN chmod -R 777 /app/server
+USER anythingllm
 RUN yarn install --production --network-timeout 100000 && yarn cache clean
 WORKDIR /app
 
