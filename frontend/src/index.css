@@ -1551,7 +1551,7 @@ does not extend the close button beyond the viewport. */
 [data-theme="egyptian"] select,
 [data-theme="egyptian"] textarea {
   font-family: "papyrus", serif;
-  font-size: 1.05rem;
+  font-size: 1.15rem;
 }
 
 /* Markdown text color overrides for better contrast in chat */
