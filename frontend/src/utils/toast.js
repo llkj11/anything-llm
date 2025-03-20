@@ -5,6 +5,10 @@ import { toast } from "react-toastify";
 // clear: false, // Will dismiss all visible toasts before rendering next toast
 const showToast = (message, type = "default", opts = {}) => {
   const theme = localStorage?.getItem("theme") || "default";
+  // For dark-based themes, use dark toast theme; for light-based themes, use light toast theme
+  const darkBasedThemes = ["default", "dark-blue", "forest", "midnight"];
+  const toastTheme = darkBasedThemes.includes(theme) ? "dark" : "light";
+  
   const options = {
     position: "bottom-center",
     autoClose: 5000,
@@ -12,7 +16,7 @@ const showToast = (message, type = "default", opts = {}) => {
     closeOnClick: true,
     pauseOnHover: true,
     draggable: true,
-    theme: theme === "default" ? "dark" : "light",
+    theme: toastTheme,
     ...opts,
   };
 

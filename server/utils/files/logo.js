@@ -27,6 +27,7 @@ function validFilename(newFilename = "") {
  * @returns {string} The filename of the logo.
  */
 function getDefaultFilename(darkMode = true) {
+  // Dark themes get light logo, light themes get dark logo
   return darkMode ? LOGO_FILENAME : LOGO_FILENAME_DARK;
 }
 

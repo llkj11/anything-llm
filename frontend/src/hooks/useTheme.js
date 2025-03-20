@@ -4,11 +4,17 @@ import { useState, useEffect } from "react";
 const availableThemes = {
   default: "Default",
   light: "Light",
+  "dark-blue": "Dark Blue",
+  forest: "Forest Green",
+  midnight: "Midnight Purple",
+  aero: "Aero",
+  "90s": "90s Retro",
+  egyptian: "Egyptian",
 };
 
 /**
  * Determines the current theme of the application
- * @returns {{theme: ('default' | 'light'), setTheme: function, availableThemes: object}} The current theme, a function to set the theme, and the available themes
+ * @returns {{theme: ('default' | 'light' | 'dark-blue' | 'forest' | 'midnight' | 'aero' | '90s' | 'egyptian'), setTheme: function, availableThemes: object}} The current theme, a function to set the theme, and the available themes
  */
 export function useTheme() {
   const [theme, _setTheme] = useState(() => {

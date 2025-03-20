@@ -2,6 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Custom theme fonts */
+@font-face {
+  font-family: "segoe-ui";
+  src: url("../public/fonts/segoe-ui.ttf");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "vt323";
+  src: url("../public/fonts/VT323-Regular.ttf");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "papyrus";
+  src: url("../public/fonts/papyrus.ttf");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "plus-jakarta-sans";
+  src: url("../public/fonts/PlusJakartaSans.ttf");
+  font-display: swap;
+}
+
 :root {
   /* Default theme */
   --theme-loader: #ffffff;
@@ -990,4 +1015,627 @@ does not extend the close button beyond the viewport. */
 
 .animate-thoughtTransition {
   animation: thoughtTransition 0.5s ease-out forwards;
+}
+
+/* Dark Blue theme */
+[data-theme="dark-blue"] {
+  --theme-loader: #4299e1;
+  
+  --theme-bg-primary: #1a202c;
+  --theme-bg-secondary: #2d3748;
+  --theme-bg-sidebar: #171e2e;
+  --theme-bg-container: #1a202c;
+  
+  --theme-bg-chat: #2d3748;
+  --theme-bg-chat-input: #3a4a63;
+  --theme-text-primary: #ffffff;
+  --theme-text-secondary: rgba(255, 255, 255, 0.7);
+  --theme-sidebar-item-default: rgba(255, 255, 255, 0.1);
+  --theme-sidebar-item-selected: rgba(66, 153, 225, 0.3);
+  --theme-sidebar-item-hover: rgba(66, 153, 225, 0.2);
+  
+  --theme-sidebar-item-text-inactive: rgba(255, 255, 255, 0.6);
+  --theme-sidebar-item-text-active: #ffffff;
+  
+  --theme-sidebar-item-workspace-active: #ffffff;
+  --theme-sidebar-item-workspace-inactive: rgba(255, 255, 255, 0.6);
+  
+  --theme-sidebar-subitem-default: rgba(255, 255, 255, 0.05);
+  --theme-sidebar-subitem-selected: rgba(66, 153, 225, 0.2);
+  --theme-sidebar-thread-selected: rgba(66, 153, 225, 0.1);
+  --theme-sidebar-subitem-hover: rgba(66, 153, 225, 0.15);
+  --theme-sidebar-border: rgba(66, 153, 225, 0.3);
+  
+  --theme-sidebar-footer-icon: rgba(255, 255, 255, 0.1);
+  --theme-sidebar-footer-icon-fill: #ffffff;
+  --theme-sidebar-footer-icon-hover: rgba(255, 255, 255, 0.2);
+  
+  --theme-chat-input-border: #4a5568;
+  --theme-action-menu-bg: #3a4a63;
+  --theme-action-menu-item-hover: rgba(255, 255, 255, 0.1);
+  --theme-settings-input-bg: #2d3748;
+  --theme-settings-input-placeholder: rgba(255, 255, 255, 0.5);
+  --theme-settings-input-active: rgba(66, 153, 225, 0.2);
+  --theme-settings-input-text: #ffffff;
+  --theme-modal-border: #4a5568;
+  
+  --theme-button-primary: #4299e1;
+  --theme-button-primary-hover: #3182ce;
+  
+  --theme-button-cta: #4299e1;
+  
+  --theme-file-row-even: #1a202c;
+  --theme-file-row-odd: #2d3748;
+  --theme-file-row-selected-even: rgba(66, 153, 225, 0.3);
+  --theme-file-row-selected-odd: rgba(66, 153, 225, 0.2);
+  --theme-file-picker-hover: rgba(66, 153, 225, 0.15);
+}
+
+/* Forest Green theme */
+[data-theme="forest"] {
+  --theme-loader: #48bb78;
+  
+  --theme-bg-primary: #1c2a1f;
+  --theme-bg-secondary: #2c3c2f;
+  --theme-bg-sidebar: #1c2a1f;
+  --theme-bg-container: #1c2a1f;
+  
+  --theme-bg-chat: #2c3c2f;
+  --theme-bg-chat-input: #3a4d3e;
+  --theme-text-primary: #ffffff;
+  --theme-text-secondary: rgba(255, 255, 255, 0.7);
+  --theme-sidebar-item-default: rgba(255, 255, 255, 0.1);
+  --theme-sidebar-item-selected: rgba(72, 187, 120, 0.3);
+  --theme-sidebar-item-hover: rgba(72, 187, 120, 0.2);
+  
+  --theme-sidebar-item-text-inactive: rgba(255, 255, 255, 0.6);
+  --theme-sidebar-item-text-active: #ffffff;
+  
+  --theme-sidebar-item-workspace-active: #ffffff;
+  --theme-sidebar-item-workspace-inactive: rgba(255, 255, 255, 0.6);
+  
+  --theme-sidebar-subitem-default: rgba(255, 255, 255, 0.05);
+  --theme-sidebar-subitem-selected: rgba(72, 187, 120, 0.2);
+  --theme-sidebar-thread-selected: rgba(72, 187, 120, 0.1);
+  --theme-sidebar-subitem-hover: rgba(72, 187, 120, 0.15);
+  --theme-sidebar-border: rgba(72, 187, 120, 0.3);
+  
+  --theme-sidebar-footer-icon: rgba(255, 255, 255, 0.1);
+  --theme-sidebar-footer-icon-fill: #ffffff;
+  --theme-sidebar-footer-icon-hover: rgba(255, 255, 255, 0.2);
+  
+  --theme-chat-input-border: #3a4d3e;
+  --theme-action-menu-bg: #3a4d3e;
+  --theme-action-menu-item-hover: rgba(255, 255, 255, 0.1);
+  --theme-settings-input-bg: #2c3c2f;
+  --theme-settings-input-placeholder: rgba(255, 255, 255, 0.5);
+  --theme-settings-input-active: rgba(72, 187, 120, 0.2);
+  --theme-settings-input-text: #ffffff;
+  --theme-modal-border: #3a4d3e;
+  
+  --theme-button-primary: #48bb78;
+  --theme-button-primary-hover: #38a169;
+  
+  --theme-button-cta: #48bb78;
+  
+  --theme-file-row-even: #1c2a1f;
+  --theme-file-row-odd: #2c3c2f;
+  --theme-file-row-selected-even: rgba(72, 187, 120, 0.3);
+  --theme-file-row-selected-odd: rgba(72, 187, 120, 0.2);
+  --theme-file-picker-hover: rgba(72, 187, 120, 0.15);
+}
+
+/* Midnight Purple theme */
+[data-theme="midnight"] {
+  --theme-loader: #9f7aea;
+  
+  --theme-bg-primary: #21143d;
+  --theme-bg-secondary: #322659;
+  --theme-bg-sidebar: #21143d;
+  --theme-bg-container: #21143d;
+  
+  --theme-bg-chat: #322659;
+  --theme-bg-chat-input: #44337a;
+  --theme-text-primary: #ffffff;
+  --theme-text-secondary: rgba(255, 255, 255, 0.7);
+  --theme-sidebar-item-default: rgba(255, 255, 255, 0.1);
+  --theme-sidebar-item-selected: rgba(159, 122, 234, 0.3);
+  --theme-sidebar-item-hover: rgba(159, 122, 234, 0.2);
+  
+  --theme-sidebar-item-text-inactive: rgba(255, 255, 255, 0.6);
+  --theme-sidebar-item-text-active: #ffffff;
+  
+  --theme-sidebar-item-workspace-active: #ffffff;
+  --theme-sidebar-item-workspace-inactive: rgba(255, 255, 255, 0.6);
+  
+  --theme-sidebar-subitem-default: rgba(255, 255, 255, 0.05);
+  --theme-sidebar-subitem-selected: rgba(159, 122, 234, 0.2);
+  --theme-sidebar-thread-selected: rgba(159, 122, 234, 0.1);
+  --theme-sidebar-subitem-hover: rgba(159, 122, 234, 0.15);
+  --theme-sidebar-border: rgba(159, 122, 234, 0.3);
+  
+  --theme-sidebar-footer-icon: rgba(255, 255, 255, 0.1);
+  --theme-sidebar-footer-icon-fill: #ffffff;
+  --theme-sidebar-footer-icon-hover: rgba(255, 255, 255, 0.2);
+  
+  --theme-chat-input-border: #44337a;
+  --theme-action-menu-bg: #44337a;
+  --theme-action-menu-item-hover: rgba(255, 255, 255, 0.1);
+  --theme-settings-input-bg: #322659;
+  --theme-settings-input-placeholder: rgba(255, 255, 255, 0.5);
+  --theme-settings-input-active: rgba(159, 122, 234, 0.2);
+  --theme-settings-input-text: #ffffff;
+  --theme-modal-border: #44337a;
+  
+  --theme-button-primary: #9f7aea;
+  --theme-button-primary-hover: #805ad5;
+  
+  --theme-button-cta: #9f7aea;
+  
+  --theme-file-row-even: #21143d;
+  --theme-file-row-odd: #322659;
+  --theme-file-row-selected-even: rgba(159, 122, 234, 0.3);
+  --theme-file-row-selected-odd: rgba(159, 122, 234, 0.2);
+  --theme-file-picker-hover: rgba(159, 122, 234, 0.15);
+}
+
+/* Aero theme - Inspired by Windows Vista/7 Aero UI */
+[data-theme="aero"] {
+  --theme-loader: #0078d7;
+  
+  --theme-bg-primary: #e4f0fc;
+  --theme-bg-secondary: #f8fbff;
+  --theme-bg-sidebar: #2a5699;
+  --theme-bg-container: #e4f0fc;
+  
+  --theme-bg-chat: #f8fbff;
+  --theme-bg-chat-input: #ffffff;
+  --theme-text-primary: #000000; /* Black text for better contrast */
+  --theme-text-secondary: #333333; /* Darker text for better contrast */
+  --theme-sidebar-item-default: rgba(255, 255, 255, 0.2);
+  --theme-sidebar-item-selected: rgba(255, 255, 255, 0.4);
+  --theme-sidebar-item-hover: rgba(255, 255, 255, 0.3);
+  
+  --theme-sidebar-item-text-inactive: #ffffff;
+  --theme-sidebar-item-text-active: #ffffff;
+  
+  --theme-sidebar-item-workspace-active: #ffffff;
+  --theme-sidebar-item-workspace-inactive: rgba(255, 255, 255, 0.7);
+  
+  --theme-sidebar-subitem-default: transparent;
+  --theme-sidebar-subitem-selected: rgba(255, 255, 255, 0.25);
+  --theme-sidebar-thread-selected: rgba(255, 255, 255, 0.2);
+  --theme-sidebar-subitem-hover: rgba(255, 255, 255, 0.15);
+  --theme-sidebar-border: rgba(0, 120, 215, 0.5);
+  
+  --theme-sidebar-footer-icon: rgba(255, 255, 255, 0.3);
+  --theme-sidebar-footer-icon-fill: #ffffff;
+  --theme-sidebar-footer-icon-hover: rgba(255, 255, 255, 0.5);
+  
+  --theme-chat-input-border: #2a5699;
+  --theme-action-menu-bg: rgba(233, 242, 252, 0.95);
+  --theme-action-menu-item-hover: rgba(0, 120, 215, 0.1);
+  --theme-settings-input-bg: #ffffff;
+  --theme-settings-input-placeholder: rgba(0, 0, 0, 0.4);
+  --theme-settings-input-active: rgba(0, 120, 215, 0.2);
+  --theme-settings-input-text: #000000;
+  --theme-modal-border: rgba(0, 120, 215, 0.3);
+  
+  --theme-button-primary: #2a5699;
+  --theme-button-primary-hover: #0078d7;
+  
+  --theme-button-cta: #0078d7;
+  
+  --theme-file-row-even: #f0f7ff;
+  --theme-file-row-odd: #e4f0fc;
+  --theme-file-row-selected-even: rgba(0, 120, 215, 0.2);
+  --theme-file-row-selected-odd: rgba(0, 120, 215, 0.15);
+  --theme-file-picker-hover: rgba(0, 120, 215, 0.1);
+}
+
+/* Add additional Aero theme-specific selectors for better element visibility */
+[data-theme="aero"] button,
+[data-theme="aero"] .button,
+[data-theme="aero"] [role="button"] {
+  background: linear-gradient(to bottom, #f8fbff 0%, #e4f0fc 100%) !important;
+  border: 1px solid rgba(0, 120, 215, 0.5) !important;
+  border-radius: 6px !important;
+  color: #000000 !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+}
+
+[data-theme="aero"] button:hover,
+[data-theme="aero"] .button:hover,
+[data-theme="aero"] [role="button"]:hover {
+  background: linear-gradient(to bottom, #f0f7ff 0%, #d0e5fc 100%) !important;
+  border: 1px solid rgba(0, 120, 215, 0.7) !important;
+}
+
+[data-theme="aero"] input,
+[data-theme="aero"] select,
+[data-theme="aero"] textarea {
+  border: 1px solid #2a5699 !important;
+  border-radius: 3px !important;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+[data-theme="aero"] .aero-glass {
+  background: rgba(233, 242, 252, 0.8) !important;
+  backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(0, 120, 215, 0.3) !important;
+  border-radius: 6px !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1) !important;
+}
+
+[data-theme="aero"] .bg-theme-bg-secondary {
+  background: rgba(248, 251, 255, 0.8) !important;
+  backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(0, 120, 215, 0.3) !important;
+  border-radius: 6px !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Aero-style scrollbars */
+[data-theme="aero"] ::-webkit-scrollbar {
+  width: 10px !important;
+  background-color: #f8fbff !important;
+}
+
+[data-theme="aero"] ::-webkit-scrollbar-thumb {
+  background-color: #8bbce5 !important;
+  border-radius: 6px !important;
+  border: 2px solid #f8fbff !important;
+}
+
+[data-theme="aero"] ::-webkit-scrollbar-track {
+  background-color: #e4f0fc !important;
+  border-radius: 6px !important;
+}
+
+[data-theme="aero"] .markdown code,
+[data-theme="aero"] .markdown pre {
+  background-color: #f0f7ff !important;
+  border: 1px solid rgba(0, 120, 215, 0.3) !important;
+  border-radius: 3px !important;
+  color: #000000 !important;
+}
+
+/* 90s theme - Nostalgic retro look */
+[data-theme="90s"] {
+  --theme-loader: #ff00ff; /* Magenta */
+  
+  --theme-bg-primary: #008080; /* Teal */
+  --theme-bg-secondary: #c0c0c0; /* Silver */
+  --theme-bg-sidebar: #000080; /* Navy */
+  --theme-bg-container: #008080;
+  
+  --theme-bg-chat: #ffffff;
+  --theme-bg-chat-input: #c0c0c0;
+  --theme-text-primary: #000000;
+  --theme-text-secondary: #000000; /* Black text for better contrast */
+  --theme-sidebar-item-default: rgba(255, 255, 255, 0.1);
+  --theme-sidebar-item-selected: rgba(255, 255, 255, 0.4);
+  --theme-sidebar-item-hover: rgba(255, 255, 255, 0.2);
+  
+  --theme-sidebar-item-text-inactive: #ffffff;
+  --theme-sidebar-item-text-active: #ffff00; /* Yellow */
+  
+  --theme-sidebar-item-workspace-active: #ffffff;
+  --theme-sidebar-item-workspace-inactive: #c0c0c0;
+  
+  --theme-sidebar-subitem-default: transparent;
+  --theme-sidebar-subitem-selected: rgba(255, 255, 255, 0.25);
+  --theme-sidebar-thread-selected: #ffffff;
+  --theme-sidebar-subitem-hover: rgba(255, 255, 255, 0.15);
+  --theme-sidebar-border: #000000;
+  
+  --theme-sidebar-footer-icon: #c0c0c0;
+  --theme-sidebar-footer-icon-fill: #000080;
+  --theme-sidebar-footer-icon-hover: #ffffff;
+  
+  --theme-chat-input-border: #000000;
+  --theme-action-menu-bg: #c0c0c0;
+  --theme-action-menu-item-hover: rgba(0, 0, 0, 0.1);
+  --theme-settings-input-bg: #ffffff;
+  --theme-settings-input-placeholder: #808080;
+  --theme-settings-input-active: #c0c0c0;
+  --theme-settings-input-text: #000000;
+  --theme-modal-border: #000000;
+  
+  --theme-button-primary: #0000ff; /* Blue */
+  --theme-button-primary-hover: #000080; /* Navy */
+  
+  --theme-button-cta: #ff0000; /* Red */
+  
+  --theme-file-row-even: #ffffff;
+  --theme-file-row-odd: #ececec;
+  --theme-file-row-selected-even: #00ffff; /* Cyan */
+  --theme-file-row-selected-odd: #00ffff; /* Cyan */
+  --theme-file-picker-hover: #c0c0c0;
+}
+
+/* Add additional 90s theme-specific selectors for better element visibility */
+[data-theme="90s"] button,
+[data-theme="90s"] .button,
+[data-theme="90s"] [role="button"] {
+  border-top: 2px solid #ffffff !important;
+  border-left: 2px solid #ffffff !important;
+  border-right: 2px solid #808080 !important;
+  border-bottom: 2px solid #808080 !important;
+  border-radius: 0 !important;
+  box-shadow: 1px 1px 0px #000000 !important;
+  color: #000000 !important;
+  font-weight: bold !important;
+}
+
+[data-theme="90s"] input,
+[data-theme="90s"] select,
+[data-theme="90s"] textarea {
+  border-top: 2px solid #808080 !important;
+  border-left: 2px solid #808080 !important;
+  border-right: 2px solid #ffffff !important;
+  border-bottom: 2px solid #ffffff !important;
+  border-radius: 0 !important;
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  box-shadow: inset 1px 1px 0px #000000 !important;
+}
+
+[data-theme="90s"] .border,
+[data-theme="90s"] [class*="border-"] {
+  border: 2px solid #000000 !important;
+  border-radius: 0 !important;
+}
+
+[data-theme="90s"] .window-border {
+  border-top: 2px solid #ffffff !important;
+  border-left: 2px solid #ffffff !important;
+  border-right: 2px solid #808080 !important;
+  border-bottom: 2px solid #808080 !important;
+  border-radius: 0 !important;
+}
+
+[data-theme="90s"] .markdown code,
+[data-theme="90s"] .markdown pre {
+  background-color: #000000 !important;
+  border: 1px solid #ffffff !important;
+  color: #00ff00 !important; /* Green text on black background like old terminals */
+  font-family: "vt323", monospace !important;
+  font-size: 1.1rem !important;
+}
+
+/* Egyptian theme */
+[data-theme="egyptian"] {
+  --theme-loader: #d4af37;
+  
+  --theme-bg-primary: #f7ebd3; /* Papyrus */
+  --theme-bg-secondary: #fcf5e8;
+  --theme-bg-sidebar: #8b4513; /* Saddle Brown */
+  --theme-bg-container: #f7ebd3;
+  
+  --theme-bg-chat: #fcf5e8;
+  --theme-bg-chat-input: #ffffff;
+  --theme-text-primary: #000000; /* Black text for better contrast */
+  --theme-text-secondary: #3d2314; /* Darker text for better contrast */
+  --theme-sidebar-item-default: rgba(255, 255, 255, 0.1);
+  --theme-sidebar-item-selected: rgba(212, 175, 55, 0.3); /* Gold */
+  --theme-sidebar-item-hover: rgba(212, 175, 55, 0.2);
+  
+  --theme-sidebar-item-text-inactive: #e8c98f;
+  --theme-sidebar-item-text-active: #ffffff;
+  
+  --theme-sidebar-item-workspace-active: #ffffff;
+  --theme-sidebar-item-workspace-inactive: #e8c98f;
+  
+  --theme-sidebar-subitem-default: transparent;
+  --theme-sidebar-subitem-selected: rgba(212, 175, 55, 0.3);
+  --theme-sidebar-thread-selected: #ffffff;
+  --theme-sidebar-subitem-hover: rgba(212, 175, 55, 0.2);
+  --theme-sidebar-border: rgba(139, 69, 19, 0.5);
+  
+  --theme-sidebar-footer-icon: rgba(139, 69, 19, 0.4);
+  --theme-sidebar-footer-icon-fill: #8b4513;
+  --theme-sidebar-footer-icon-hover: rgba(139, 69, 19, 0.6);
+  
+  --theme-chat-input-border: rgba(139, 69, 19, 0.5);
+  --theme-action-menu-bg: #f7ebd3;
+  --theme-action-menu-item-hover: rgba(139, 69, 19, 0.2);
+  --theme-settings-input-bg: #ffffff;
+  --theme-settings-input-placeholder: rgba(139, 69, 19, 0.7);
+  --theme-settings-input-active: rgba(139, 69, 19, 0.3);
+  --theme-settings-input-text: #000000;
+  --theme-modal-border: rgba(139, 69, 19, 0.5);
+  
+  --theme-button-primary: #8b4513;
+  --theme-button-primary-hover: #a0522d;
+  
+  --theme-button-cta: #8b4513;
+  
+  --theme-file-row-even: #f7ebd3;
+  --theme-file-row-odd: #ede1c9;
+  --theme-file-row-selected-even: rgba(139, 69, 19, 0.3);
+  --theme-file-row-selected-odd: rgba(139, 69, 19, 0.2);
+  --theme-file-picker-hover: rgba(139, 69, 19, 0.1);
+}
+
+/* Add additional Egyptian theme-specific selectors for better element visibility */
+[data-theme="egyptian"] button,
+[data-theme="egyptian"] .button,
+[data-theme="egyptian"] [role="button"] {
+  border: 1px solid rgba(139, 69, 19, 0.7) !important;
+  color: #000000 !important;
+  background-color: #f7ebd3 !important;
+  box-shadow: 0 1px 2px rgba(139, 69, 19, 0.2) !important;
+}
+
+[data-theme="egyptian"] button:hover,
+[data-theme="egyptian"] .button:hover,
+[data-theme="egyptian"] [role="button"]:hover {
+  background-color: #ede1c9 !important;
+  border: 1px solid #8b4513 !important;
+}
+
+/* Ensure buttons at the bottom of instance settings are visible */
+[data-theme="egyptian"] .bg-theme-button-primary,
+[data-theme="egyptian"] .bg-primary-button,
+[data-theme="egyptian"] .bg-theme-button-cta {
+  background-color: #8b4513 !important;
+  color: #ffffff !important;
+  border: 1px solid #8b4513 !important;
+}
+
+[data-theme="egyptian"] .bg-theme-button-primary:hover,
+[data-theme="egyptian"] .bg-primary-button:hover,
+[data-theme="egyptian"] .bg-theme-button-cta:hover {
+  background-color: #a0522d !important;
+}
+
+/* Fix visibility of the sidebar footer buttons in Egyptian theme */
+[data-theme="egyptian"] .sidebar-footer svg,
+[data-theme="egyptian"] .sidebar-footer a svg,
+[data-theme="egyptian"] .sidebar-footer button svg,
+[data-theme="egyptian"] footer svg {
+  fill: #ffffff !important;
+  color: #ffffff !important;
+}
+
+[data-theme="egyptian"] .bg-theme-sidebar-footer-icon {
+  background-color: rgba(0, 0, 0, 0.6) !important;
+}
+
+[data-theme="egyptian"] .bg-theme-sidebar-footer-icon:hover {
+  background-color: rgba(0, 0, 0, 0.8) !important;
+  border: 1px solid #d4af37 !important;
+}
+
+[data-theme="egyptian"] .bg-theme-sidebar-footer-icon-hover {
+  background-color: rgba(0, 0, 0, 0.8) !important;
+}
+
+[data-theme="egyptian"] .sidebar-footer button,
+[data-theme="egyptian"] .sidebar-footer [role="button"] {
+  background-color: rgba(0, 0, 0, 0.6) !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+[data-theme="egyptian"] .sidebar-footer button:hover,
+[data-theme="egyptian"] .sidebar-footer [role="button"]:hover {
+  background-color: rgba(0, 0, 0, 0.8) !important;
+  border: 1px solid #d4af37 !important;
+}
+
+/* Add theme-specific fonts */
+[data-theme="aero"] body,
+[data-theme="aero"] input,
+[data-theme="aero"] button,
+[data-theme="aero"] select,
+[data-theme="aero"] textarea {
+  font-family: "segoe-ui", -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+[data-theme="90s"] body,
+[data-theme="90s"] input,
+[data-theme="90s"] button,
+[data-theme="90s"] select,
+[data-theme="90s"] textarea {
+  font-family: "vt323", monospace;
+  font-size: 1.1rem;
+}
+
+[data-theme="egyptian"] body,
+[data-theme="egyptian"] input,
+[data-theme="egyptian"] button,
+[data-theme="egyptian"] select,
+[data-theme="egyptian"] textarea {
+  font-family: "papyrus", serif;
+  font-size: 1.05rem;
+}
+
+/* Markdown text color overrides for better contrast in chat */
+[data-theme="aero"] .markdown p,
+[data-theme="aero"] .markdown li,
+[data-theme="aero"] .markdown ol,
+[data-theme="aero"] .markdown ul,
+[data-theme="aero"] .markdown h1,
+[data-theme="aero"] .markdown h2,
+[data-theme="aero"] .markdown h3,
+[data-theme="aero"] .markdown table {
+  color: #000000;
+}
+
+[data-theme="90s"] .markdown p,
+[data-theme="90s"] .markdown li,
+[data-theme="90s"] .markdown ol,
+[data-theme="90s"] .markdown ul,
+[data-theme="90s"] .markdown h1,
+[data-theme="90s"] .markdown h2,
+[data-theme="90s"] .markdown h3,
+[data-theme="90s"] .markdown table {
+  color: #000000;
+}
+
+[data-theme="egyptian"] .markdown p,
+[data-theme="egyptian"] .markdown li,
+[data-theme="egyptian"] .markdown ol,
+[data-theme="egyptian"] .markdown ul,
+[data-theme="egyptian"] .markdown h1,
+[data-theme="egyptian"] .markdown h2,
+[data-theme="egyptian"] .markdown h3,
+[data-theme="egyptian"] .markdown table {
+  color: #000000;
+}
+
+[data-theme="aero"] .markdown strong,
+[data-theme="90s"] .markdown strong,
+[data-theme="egyptian"] .markdown strong {
+  color: #000000;
+  font-weight: 700;
+}
+
+/* Add text color overrides for each new theme */
+[data-theme="aero"] .text-white,
+[data-theme="90s"] .text-white,
+[data-theme="egyptian"] .text-white,
+[data-theme="dark-blue"] .text-white,
+[data-theme="forest"] .text-white,
+[data-theme="midnight"] .text-white {
+  color: var(--theme-text-primary);
+}
+
+[data-theme="aero"] .text-description,
+[data-theme="aero"] .text-white\/60,
+[data-theme="90s"] .text-description,
+[data-theme="90s"] .text-white\/60,
+[data-theme="egyptian"] .text-description,
+[data-theme="egyptian"] .text-white\/60,
+[data-theme="dark-blue"] .text-description,
+[data-theme="dark-blue"] .text-white\/60,
+[data-theme="forest"] .text-description,
+[data-theme="forest"] .text-white\/60,
+[data-theme="midnight"] .text-description,
+[data-theme="midnight"] .text-white\/60 {
+  color: var(--theme-text-secondary);
+}
+
+[data-theme="aero"] .bg-theme-bg-secondary,
+[data-theme="90s"] .bg-theme-bg-secondary,
+[data-theme="egyptian"] .bg-theme-bg-secondary,
+[data-theme="dark-blue"] .bg-theme-bg-secondary,
+[data-theme="forest"] .bg-theme-bg-secondary,
+[data-theme="midnight"] .bg-theme-bg-secondary {
+  border: 1px solid var(--theme-sidebar-border);
+}
+
+/*
+This is to override the default border color for the select and input elements
+in the onboarding flow when the theme is not light. This only applies to the
+onboarding flow since its background is dark and is the same fill as the inputs.
+*/
+[data-layout="onboarding"] > * select:not([data-theme="light"]),
+[data-layout="onboarding"] > * input:not([data-theme="light"]),
+[data-layout="onboarding"] > * textarea:not([data-theme="light"]) {
+  border: 1px solid #ffffff;
 }
