@@ -1554,27 +1554,12 @@ does not extend the close button beyond the viewport. */
   font-size: 1.15rem;
 }
 
-/* Markdown text color overrides for better contrast in chat */
-[data-theme="aero"] .markdown p,
-[data-theme="aero"] .markdown li,
-[data-theme="aero"] .markdown ol,
-[data-theme="aero"] .markdown ul,
-[data-theme="aero"] .markdown h1,
-[data-theme="aero"] .markdown h2,
-[data-theme="aero"] .markdown h3,
-[data-theme="aero"] .markdown table {
-  color: #000000;
-}
-
-[data-theme="90s"] .markdown p,
-[data-theme="90s"] .markdown li,
-[data-theme="90s"] .markdown ol,
-[data-theme="90s"] .markdown ul,
-[data-theme="90s"] .markdown h1,
-[data-theme="90s"] .markdown h2,
-[data-theme="90s"] .markdown h3,
-[data-theme="90s"] .markdown table {
-  color: #000000;
+/* Ensure Egyptian font is applied to chat messages and markdown content */
+[data-theme="egyptian"] .markdown,
+[data-theme="egyptian"] .markdown div,
+[data-theme="egyptian"] .markdown span {
+  font-family: "papyrus", serif !important;
+  font-size: 1.15rem !important;
 }
 
 [data-theme="egyptian"] .markdown p,
@@ -1586,10 +1571,10 @@ does not extend the close button beyond the viewport. */
 [data-theme="egyptian"] .markdown h3,
 [data-theme="egyptian"] .markdown table {
   color: #000000;
+  font-family: "papyrus", serif !important;
+  font-size: 1.15rem !important;
 }
 
-[data-theme="aero"] .markdown strong,
-[data-theme="90s"] .markdown strong,
 [data-theme="egyptian"] .markdown strong {
   color: #000000;
   font-weight: 700;
