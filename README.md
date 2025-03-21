@@ -118,10 +118,10 @@ AnythingLLM divides your documents into objects called `workspaces`. A Workspace
 
 **TTS (text-to-speech) support:**
 
-- Native Browser Built-in (default)
-- [PiperTTSLocal - runs in browser](https://github.com/rhasspy/piper)
-- [OpenAI TTS](https://platform.openai.com/docs/guides/text-to-speech/voice-options)
+- [Browser native TTS](https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API)
 - [ElevenLabs](https://elevenlabs.io/)
+- [PiperTTSLocal - runs in browser](https://github.com/rhasspy/piper)
+- [OpenAI TTS](https://platform.openai.com/docs/guides/text-to-speech/voice-options) (including GPT-4o TTS with voice style instructions)
 - Any OpenAI Compatible TTS service.
 
 **STT (speech-to-text) support:**

@@ -29,7 +29,7 @@ const PROVIDERS = [
     value: "openai",
     logo: OpenAiLogo,
     options: (settings) => <OpenAiTTSOptions settings={settings} />,
-    description: "Use OpenAI's text to speech voices.",
+    description: "Use OpenAI's text to speech voices, including customizable GPT-4o TTS.",
   },
   {
     name: "ElevenLabs",

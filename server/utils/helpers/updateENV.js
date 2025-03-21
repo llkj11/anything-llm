@@ -942,11 +942,38 @@ function dumpENV() {
 
   const frozenEnvs = {};
   const protectedKeys = [
-    ...Object.values(KEY_MAPPING).map((values) => values.envKey),
-    // Manually Add Keys here which are not already defined in KEY_MAPPING
-    // and are either managed or manually set ENV key:values.
     "STORAGE_DIR",
-    "SERVER_PORT",
+    "CACHE_DIR",
+    "JWT_SECRET",
+    "AUTHD_ADMIN_PASSWORD",
+    "AUTHD_ADMIN_USERNAME",
+    "EMBEDDING_BASE_URL",
+    "EMBEDDING_API_KEY",
+    "AUTH_TOKEN",
+    "DATASOURCE_PROJECT_DIR",
+    "PYTHON_API_URL",
+    // Vector DB Keys
+    "VECTOR_DB",
+    "CHROMA_URL",
+    "CHROMA_API_HEADER",
+    "CHROMA_API_KEY",
+    "WEAVIATE_URL",
+    "WEAVIATE_API_KEY",
+    "PINECONE_ENVIRONMENT",
+    "PINECONE_API_KEY",
+    "QDRANT_URL",
+    "QDRANT_API_KEY",
+    "MILVUS_URL",
+    "MILVUS_API_KEY",
+    "ZILLIZ_CLOUD_URL",
+    "ZILLIZ_CLOUD_API_KEY",
+    "ASTRA_DB_ID",
+    "ASTRA_DB_ENDPOINT",
+    "ASTRA_DB_APPLICATION_TOKEN",
+    "ASTRA_DB_NAMESPACE",
+    "ENV_FROM_FILE",
+    // Specific keys we don't want to lose
+    "EMBEDDING_MODEL_PREF",
     // For persistent data encryption
     "SIG_KEY",
     "SIG_SALT",
@@ -974,6 +1001,25 @@ function dumpENV() {
 
     // OCR Language Support
     "TARGET_OCR_LANG",
+    
+    // TTS Settings
+    "TTS_PROVIDER",
+    "TTS_OPEN_AI_KEY",
+    "TTS_OPEN_AI_VOICE_MODEL",
+    "TTS_OPEN_AI_MODEL",
+    "TTS_OPEN_AI_INSTRUCTIONS",
+    "TTS_ELEVEN_LABS_KEY",
+    "TTS_ELEVEN_LABS_VOICE_MODEL",
+    "TTS_ELEVEN_LABS_MODEL",
+    "TTS_PIPER_VOICE_MODEL",
+    "TTS_OPEN_AI_COMPATIBLE_KEY",
+    "TTS_OPEN_AI_COMPATIBLE_VOICE_MODEL",
+    "TTS_OPEN_AI_COMPATIBLE_ENDPOINT",
+    "TTS_GPT4O_KEY",
+    "TTS_GPT4O_VOICE",
+    "TTS_GPT4O_MODEL",
+    "TTS_GPT4O_FORMAT",
+    "TTS_GPT4O_INSTRUCTIONS",
   ];
 
   // Simple sanitization of each value to prevent ENV injection via newline or quote escaping.

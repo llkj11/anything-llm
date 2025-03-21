@@ -467,9 +467,24 @@ function systemEndpoints(app) {
           false,
           response?.locals?.user?.id
         );
+        
+        // Special handling for TTS model settings
         if (typeof body.TTSElevenLabsModel !== "undefined") {
           newValues.TTSElevenLabsModel = body.TTSElevenLabsModel;
+          process.env.TTS_ELEVEN_LABS_MODEL = body.TTSElevenLabsModel;
         }
+        if (typeof body.TTSOpenAIModel !== "undefined") {
+          newValues.TTSOpenAIModel = body.TTSOpenAIModel;
+          process.env.TTS_OPEN_AI_MODEL = body.TTSOpenAIModel;
+        }
+        if (typeof body.TTSOpenAIInstructions !== "undefined") {
+          newValues.TTSOpenAIInstructions = body.TTSOpenAIInstructions;
+          process.env.TTS_OPEN_AI_INSTRUCTIONS = body.TTSOpenAIInstructions;
+        }
+        
+        // Dump to .env file in production
+        if (process.env.NODE_ENV === "production") dumpENV();
+        
         response.status(200).json({ newValues, error });
       } catch (e) {
         console.error(e.message, e);
