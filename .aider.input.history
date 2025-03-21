@@ -1,0 +1,291 @@
+
+# 2025-03-17 10:05:15.993437
++y
+
+# 2025-03-17 10:05:39.169132
++exit
+
+# 2025-03-17 10:10:15.028486
++y
+
+# 2025-03-17 10:12:57.422835
++/ask Hello. For some reason I'm getting this error when trying to do npm install. Can you help? PS C:\Users\llkj11\Documents\anything-llm> cd server && npm install
++npm error code ERESOLVE
++npm error ERESOLVE could not resolve
++npm error
++npm error While resolving: @langchain/community@0.0.53
++npm error Found: @datastax/astra-db-ts@0.1.4
++npm error node_modules/@datastax/astra-db-ts
++npm error   @datastax/astra-db-ts@"^0.1.3" from the root project
++npm error
++npm error Could not resolve dependency:
++npm error peerOptional @datastax/astra-db-ts@"^1.0.0" from @langchain/community@0.0.53
++npm error node_modules/@langchain/community
++npm error   @langchain/community@"0.0.53" from the root project
++npm error   @langchain/community@"~0.0.47" from langchain@0.1.36
++npm error   node_modules/langchain
++npm error     langchain@"0.1.36" from the root project
++npm error     1 more (langsmith)
++npm error
++npm error Conflicting peer dependency: @datastax/astra-db-ts@1.5.0
++npm error node_modules/@datastax/astra-db-ts
++npm error   peerOptional @datastax/astra-db-ts@"^1.0.0" from @langchain/community@0.0.53
++npm error   node_modules/@langchain/community
++npm error     @langchain/community@"0.0.53" from the root project
++npm error     @langchain/community@"~0.0.47" from langchain@0.1.36
++npm error     node_modules/langchain
++npm error       langchain@"0.1.36" from the root project
++npm error       1 more (langsmith)
++npm error
++npm error Fix the upstream dependency conflict, or retry
+
+# 2025-03-17 10:19:15.786692
++n
+
+# 2025-03-17 10:19:25.431983
++/tokens
+
+# 2025-03-17 10:19:44.368607
++/drop server\package-lock.json
+
+# 2025-03-17 10:19:46.801006
++/tokens
+
+# 2025-03-17 10:20:16.857952
++/add server\package.json
+
+# 2025-03-17 10:20:20.055515
++/tokens
+
+# 2025-03-17 10:20:34.109036
++Ok I added the server package.json file. Does it help? 
+
+# 2025-03-17 10:22:11.507896
++n
+
+# 2025-03-17 10:22:47.292046
++/run cd server && rm -rf node_modules package-lock.json && npm install
+
+# 2025-03-17 10:22:47.292046
++/run cd server && rm -rf node_modules package-lock.json && npm install
+
+# 2025-03-17 10:23:03.366787
++Getting error
+
+# 2025-03-17 10:25:08.651899
++/run cd server && rmdir /s /q node_modules && del package-lock.json && npm install
+
+# 2025-03-17 10:25:08.651899
++/run cd server && rmdir /s /q node_modules && del package-lock.json && npm install
+
+# 2025-03-17 10:25:36.401512
++/model anthropic/claude-3-7-sonnet
+
+# 2025-03-17 10:25:56.071867
++Now? 
+
+# 2025-03-17 10:26:30.161400
++/model openrouter/anthropic/claude-3-7-sonnet
+
+# 2025-03-17 10:26:53.738842
++/model openrouter/anthropic/claude-3.7-sonnet
+
+# 2025-03-17 10:26:58.335168
++What about now? 
+
+# 2025-03-17 10:27:33.639245
++/run cd server
+
+# 2025-03-17 10:27:33.639245
++/run cd server
+
+# 2025-03-17 10:27:33.801218
++/run npm install --force
+
+# 2025-03-17 10:27:33.801218
++/run npm install --force
+
+# 2025-03-17 10:28:36.524287
++/run cd server
+
+# 2025-03-17 10:28:36.524287
++/run cd server
+
+# 2025-03-17 10:28:36.686146
++/run npm cache clean --force
+
+# 2025-03-17 10:28:36.693089
++/run npm cache clean --force
+
+# 2025-03-17 10:28:45.741972
++/run npm install
+
+# 2025-03-17 10:28:45.748603
++/run npm install
+
+# 2025-03-17 10:29:24.837010
++Getting this error: PS C:\Users\llkj11\Documents\anything-llm\server> npm start
++
++> anything-llm-server@0.2.0 start
++> cross-env NODE_ENV=production node index.js
++
++'cross-env' is not recognized as an internal or external command,
++operable program or batch file.
++PS C:\Users\llkj11\Documents\anything-llm\server>
+
+# 2025-03-17 10:30:14.323566
++/run cd server
+
+# 2025-03-17 10:30:14.323566
++/run cd server
+
+# 2025-03-17 10:30:14.463849
++/run npm install cross-env
+
+# 2025-03-17 10:30:14.463849
++/run npm install cross-env
+
+# 2025-03-17 10:30:16.696820
++/run npm start
+
+# 2025-03-17 10:30:16.696820
++/run npm start
+
+# 2025-03-17 10:32:13.707617
++/ask Why do I have to do npm install separately? Isn't it already in the package.json? 
+
+# 2025-03-17 10:36:06.270612
++PS C:\Users\llkj11\Documents\anything-llm\server> npm start
++
++> anything-llm-server@0.2.0 start
++> cross-env NODE_ENV=production node index.js
++
++node:internal/modules/cjs/loader:1252
++  throw err;
++  ^
++
++Error: Cannot find module 'dotenv'
++Require stack:
++- C:\Users\llkj11\Documents\anything-llm\server\index.js
++    at Function._resolveFilename (node:internal/modules/cjs/loader:1249:15)
++    at Function._load (node:internal/modules/cjs/loader:1075:27)
++    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
++    at wrapModuleLoad (node:internal/modules/cjs/loader:219:24)
++    at Module.require (node:internal/modules/cjs/loader:1340:12)
++    at require (node:internal/modules/helpers:138:16)
++    at Object.<anonymous> (C:\Users\llkj11\Documents\anything-llm\server\index.js:3:5)
++    at Module._compile (node:internal/modules/cjs/loader:1565:14)
++    at Object..js (node:internal/modules/cjs/loader:1708:10)
++    at Module.load (node:internal/modules/cjs/loader:1318:32) {
++  code: 'MODULE_NOT_FOUND',
++  requireStack: [ 'C:\\Users\\llkj11\\Documents\\anything-llm\\server\\index.js' ]
++}
++
++Node.js v22.12.0
+
+# 2025-03-17 10:37:13.943115
++n
+
+# 2025-03-17 10:37:19.633767
++PS C:\Users\llkj11\Documents\anything-llm\server> npm install
++npm error code ERESOLVE
++npm error ERESOLVE could not resolve
++npm error
++npm error While resolving: chromadb@1.8.1
++npm error Found: @google/generative-ai@0.7.1
++npm error node_modules/@google/generative-ai
++npm error   @google/generative-ai@"^0.7.1" from the root project
++npm error
++npm error Could not resolve dependency:
++npm error peerOptional @google/generative-ai@"^0.1.1" from chromadb@1.8.1
++npm error node_modules/chromadb
++npm error   chromadb@"^1.5.2" from the root project
++npm error   peerOptional chromadb@"*" from @langchain/community@0.0.53
++npm error   node_modules/@langchain/community
++npm error     @langchain/community@"0.0.53" from the root project
++npm error     1 more (langchain)
++npm error   1 more (langchain)
++npm error
++npm error Conflicting peer dependency: @google/generative-ai@0.1.3
++npm error node_modules/@google/generative-ai
++npm error   peerOptional @google/generative-ai@"^0.1.1" from chromadb@1.8.1
++npm error   node_modules/chromadb
++npm error     chromadb@"^1.5.2" from the root project
++npm error     peerOptional chromadb@"*" from @langchain/community@0.0.53
++npm error     node_modules/@langchain/community
++npm error       @langchain/community@"0.0.53" from the root project
++npm error       1 more (langchain)
++npm error     1 more (langchain)
++npm error
++npm error Fix the upstream dependency conflict, or retry
++npm error this command with --force or --legacy-peer-deps
++npm error to accept an incorrect (and potentially broken) dependency resolution.
++npm error
++npm error
++npm error For a full report see:
++npm error C:\Users\llkj11\AppData\Local\npm-cache\_logs\2025-03-17T14_36_54_833Z-eresolve-report.txt
++npm error A complete log of this run can be found in: C:\Users\llkj11\AppData\Local\npm-cache\_logs\2025-03-17T14_36_54_833Z-debug-0.log
+
+# 2025-03-17 10:40:40.533850
++n
+
+# 2025-03-17 10:41:05.719686
++PS C:\Users\llkj11\Documents\anything-llm\server>  npm install --legacy-peer-deps
++npm warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
++npm warn deprecated npmlog@5.0.1: This package is no longer supported.
++npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
++npm warn deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
++npm warn deprecated are-we-there-yet@2.0.0: This package is no longer supported.
++npm warn deprecated @ladjs/graceful@3.2.2: Please upgrade to @ladjs/graceful@4.0.1+ as we have fixed a bug where custom handlers and servers may require redis/mongo connection for functionality, and if disconnected could throw an uncaught exception; https://github.com/ladjs/graceful/releases/tag/v4.0.1 (maintained by @forwardemail @ https://forwardemail.net)
++npm warn deprecated @humanwhocodes/config-array@0.11.14: Use @eslint/config-array instead
++npm warn deprecated gauge@3.0.2: This package is no longer supported.
++npm warn deprecated @humanwhocodes/object-schema@2.0.3: Use @eslint/object-schema instead
++npm warn deprecated boolean@3.2.0: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
++npm warn deprecated @azure/openai@1.0.0-beta.10: The Azure OpenAI client library for JavaScript beta has been retired. Please migrate to the stable OpenAI SDK for JavaScript using the migration guide: https://github.com/Azure/azure-sdk-for-js/blob/main/sdk/openai/openai/MIGRATION.md.
++npm warn deprecated eslint@8.57.0: This version is no longer supported. Please see https://eslint.org/version-support for other options.
++
++added 951 packages, and audited 952 packages in 52s
++
++164 packages are looking for funding
++  run `npm fund` for details
++
++21 vulnerabilities (4 low, 8 moderate, 9 high)
++
++To address issues that do not require attention, run:
++  npm audit fix
++
++To address all issues (including breaking changes), run:
++  npm audit fix --force
++
++Run `npm audit` for details.
++PS C:\Users\llkj11\Documents\anything-llm\server> npm start
++
++> anything-llm-server@0.2.0 start
++> cross-env NODE_ENV=production node index.js
++
++node:internal/errors:540
++      throw error;
++      ^
++
++TypeError [ERR_INVALID_ARG_TYPE]: The "paths[0]" argument must be of type string. Received undefined
++    at Object.resolve (node:path:198:9)
++    at Object.<anonymous> (C:\Users\llkj11\Documents\anything-llm\server\utils\files\index.js:9:12)
++    at Module._compile (node:internal/modules/cjs/loader:1565:14)
++    at Object..js (node:internal/modules/cjs/loader:1708:10)
++    at Module.load (node:internal/modules/cjs/loader:1318:32)
++    at Function._load (node:internal/modules/cjs/loader:1128:12)
++    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
++    at wrapModuleLoad (node:internal/modules/cjs/loader:219:24)
++    at Module.require (node:internal/modules/cjs/loader:1340:12)
++    at require (node:internal/modules/helpers:138:16) {
++  code: 'ERR_INVALID_ARG_TYPE'
++}
++
++Node.js v22.12.0
++PS C:\Users\llkj11\Documents\anything-llm\server>          Would it be easier just to use docker? I wanted this to be simple to deploy on multiple devices. 
+
+# 2025-03-17 10:41:08.109725
++n
+
+# 2025-03-17 10:42:19.760392
++/ask I already have docker files in this repo was just asking question. Takes a while to build this that's why I was just trying to do the npm stuff but keep having issues. 
