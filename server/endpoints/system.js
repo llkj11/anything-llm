@@ -462,6 +462,10 @@ function systemEndpoints(app) {
     async (request, response) => {
       try {
         const body = reqBody(request);
+        
+        // Special handling is now in updateENV function directly
+        // No need for special handling here anymore
+        
         const { newValues, error } = await updateENV(
           body,
           false,

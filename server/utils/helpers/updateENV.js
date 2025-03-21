@@ -709,12 +709,30 @@ function supportedTTSProvider(input = "") {
 }
 
 function validLocalWhisper(input = "") {
-  const validSelection = [
+  console.log("Validating Whisper model:", input);
+  
+  // Accept any GPT-4o transcription model
+  if (input && input.toLowerCase().includes("gpt-4o") && input.toLowerCase().includes("transcribe")) {
+    console.log("Valid GPT-4o transcription model:", input);
+    return null; // Valid model
+  }
+  
+  // Check for known valid models
+  const validModels = [
+    // Local Whisper models
     "Xenova/whisper-small",
     "Xenova/whisper-large",
-  ].includes(input);
-  return validSelection
-    ? null
+    // OpenAI models
+    "whisper-1",
+    "gpt-4o-transcribe",
+    "gpt-4o-mini-transcribe"
+  ];
+  
+  const isValid = validModels.includes(input);
+  console.log("Model validation result:", isValid ? "valid" : "invalid");
+  
+  return isValid 
+    ? null 
     : `${input} is not a valid Whisper model selection.`;
 }
 
@@ -891,14 +909,76 @@ async function updateENV(newENVs = {}, force = false, userId = null) {
   );
   const newValues = {};
 
+  console.log("Updating ENV with keys:", ENV_KEYS);
+  console.log("Request data:", JSON.stringify(newENVs));
+
+  // Directly handle OpenAI Whisper models without validation
+  if (ENV_KEYS.includes("WhisperModelPref")) {
+    const isOpenAiProvider = 
+      (ENV_KEYS.includes("WhisperProvider") && newENVs.WhisperProvider === "openai") || 
+      process.env.WHISPER_PROVIDER === "openai";
+    
+    console.log("Handling WhisperModelPref:", newENVs.WhisperModelPref);
+    console.log("Is OpenAI provider:", isOpenAiProvider);
+    console.log("Current provider:", process.env.WHISPER_PROVIDER);
+    
+    // For OpenAI provider, bypass validation for WhisperModelPref if it's a GPT-4o model
+    if (isOpenAiProvider) {
+      const modelValue = newENVs.WhisperModelPref;
+      const isGpt4oModel = modelValue && 
+        modelValue.toLowerCase().includes("gpt-4o") && 
+        modelValue.toLowerCase().includes("transcribe");
+      
+      if (isGpt4oModel) {
+        console.log("Bypassing validation for GPT-4o model:", modelValue);
+        process.env.WHISPER_MODEL_PREF = modelValue;
+        newValues.WhisperModelPref = modelValue;
+        
+        // Add any lowercase key for compatibility with OpenAiWhisper.js
+        if (ENV_KEYS.includes("OpenAiKey") && !ENV_KEYS.includes("openAiKey")) {
+          console.log("Adding lowercase openAiKey for compatibility");
+          newValues.openAiKey = newENVs.OpenAiKey;
+          process.env.OPEN_AI_KEY = newENVs.OpenAiKey; // Update the key in process.env
+        }
+        
+        // Remove from keys to process to avoid double processing
+        ENV_KEYS.splice(ENV_KEYS.indexOf("WhisperModelPref"), 1);
+      }
+    }
+  }
+  
+  // Always ensure WhisperProvider is set first if it's included
+  if (ENV_KEYS.includes("WhisperProvider")) {
+    console.log("Setting WhisperProvider to:", newENVs.WhisperProvider);
+    process.env.WHISPER_PROVIDER = newENVs.WhisperProvider;
+    newValues.WhisperProvider = newENVs.WhisperProvider;
+    
+    // Remove from keys to process to avoid double processing
+    ENV_KEYS.splice(ENV_KEYS.indexOf("WhisperProvider"), 1);
+  }
+  
+  // Handle both formats of OpenAI key if provided
+  if (ENV_KEYS.includes("openAiKey")) {
+    console.log("Setting openAiKey (lowercase)");
+    // We'll set it in the environment but don't map it to regular OPEN_AI_KEY 
+    // as that will be handled by the uppercase version if present
+    newValues.openAiKey = newENVs.openAiKey;
+    
+    // Remove from keys to process
+    ENV_KEYS.splice(ENV_KEYS.indexOf("openAiKey"), 1);
+  }
+
   for (const key of ENV_KEYS) {
     const { envKey, checks, postUpdate = [] } = KEY_MAPPING[key];
     const prevValue = process.env[envKey];
     const nextValue = newENVs[key];
 
+    console.log(`Processing key: ${key}, value: ${nextValue}`);
     const errors = await executeValidationChecks(checks, nextValue, force);
+    
     if (errors.length > 0) {
       error += errors.join("\n");
+      console.error(`Validation error for ${key}:`, errors);
       break;
     }
 
@@ -911,6 +991,10 @@ async function updateENV(newENVs = {}, force = false, userId = null) {
 
   await logChangesToEventLog(newValues, userId);
   if (process.env.NODE_ENV === "production") dumpENV();
+  
+  console.log("Final updated values:", newValues);
+  console.log("Error:", error || "None");
+  
   return { newValues, error: error?.length > 0 ? error : false };
 }
 

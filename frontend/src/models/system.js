@@ -134,16 +134,26 @@ const System = {
       .catch(() => null);
   },
   updateSystem: async (data) => {
-    return await fetch(`${API_BASE}/system/update-env`, {
-      method: "POST",
-      headers: baseHeaders(),
-      body: JSON.stringify(data),
-    })
-      .then((res) => res.json())
-      .catch((e) => {
-        console.error(e);
-        return { newValues: null, error: e.message };
+    console.log("Sending data to server:", data);
+    try {
+      const response = await fetch(`${API_BASE}/system/update-env`, {
+        method: "POST",
+        headers: baseHeaders(),
+        body: JSON.stringify(data),
       });
+      
+      if (!response.ok) {
+        console.error("Server returned error status:", response.status);
+        return { newValues: null, error: `Server returned ${response.status}` };
+      }
+      
+      const result = await response.json();
+      console.log("Server response received:", result);
+      return result;
+    } catch (e) {
+      console.error("Error updating system settings:", e);
+      return { newValues: null, error: e.message };
+    }
   },
   updateSystemPassword: async (data) => {
     return await fetch(`${API_BASE}/system/update-password`, {

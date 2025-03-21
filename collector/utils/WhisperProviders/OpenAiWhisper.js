@@ -8,9 +8,11 @@ class OpenAiWhisper {
     this.openai = new OpenAIApi({
       apiKey: options.openAiKey,
     });
-    this.model = "whisper-1";
+    
+    // Set the model with fallback to whisper-1
+    this.model = options.WhisperModelPref || "whisper-1";
     this.temperature = 0;
-    this.#log("Initialized.");
+    this.#log(`Initialized with model: ${this.model}`);
   }
 
   #log(text, ...args) {
@@ -18,6 +20,8 @@ class OpenAiWhisper {
   }
 
   async processFile(fullFilePath) {
+    this.#log(`Processing file with model: ${this.model}`);
+    
     return await this.openai.audio.transcriptions
       .create({
         file: fs.createReadStream(fullFilePath),
@@ -36,8 +40,7 @@ class OpenAiWhisper {
       })
       .catch((error) => {
         this.#log(
-          `Could not get any response from openai whisper`,
-          error.message
+          `Could not get any response from OpenAI: ${error.message}`
         );
         return { content: "", error: error.message };
       });

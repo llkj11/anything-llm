@@ -143,7 +143,12 @@ function apiSystemEndpoints(app) {
       */
       try {
         const body = reqBody(request);
+        
+        // Special handling is now in updateENV function directly
+        // No need for special handling here anymore
+        
         const { newValues, error } = await updateENV(body);
+        
         response.status(200).json({ newValues, error });
       } catch (e) {
         console.error(e.message, e);

@@ -19,7 +19,7 @@ const PROVIDERS = [
     value: "openai",
     logo: OpenAiLogo,
     options: (settings) => <OpenAiWhisperOptions settings={settings} />,
-    description: "Leverage the OpenAI Whisper-large model using your API key.",
+    description: "Use OpenAI transcription models including Whisper and GPT-4o transcribe models.",
   },
   {
     name: "AnythingLLM Built-In",
@@ -43,22 +43,63 @@ export default function TranscriptionModelPreference() {
   const { t } = useTranslation();
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    const form = e.target;
-    const data = { WhisperProvider: selectedProvider };
-    const formData = new FormData(form);
-
-    for (var [key, value] of formData.entries()) data[key] = value;
-    const { error } = await System.updateSystem(data);
-    setSaving(true);
-
-    if (error) {
-      showToast(`Failed to save preferences: ${error}`, "error");
-    } else {
-      showToast("Transcription preferences saved successfully.", "success");
+    if (e && e.preventDefault) {
+      e.preventDefault();
     }
-    setSaving(false);
-    setHasChanges(!!error);
+    
+    const formElement = document.querySelector('form');
+    
+    // Always ensure WhisperProvider is set first
+    const data = { WhisperProvider: selectedProvider };
+    
+    if (formElement) {
+      const formData = new FormData(formElement);
+      // Convert FormData to object
+      for (var [key, value] of formData.entries()) {
+        data[key] = value;
+        
+        // Special case for OpenAiKey - add both formats for compatibility
+        if (key === "OpenAiKey") {
+          data.openAiKey = value; // Add lowercase version too
+        }
+      }
+    }
+    
+    // Make sure we have a WhisperModelPref even if the form doesn't provide it
+    if (!data.WhisperModelPref && selectedProvider === 'openai') {
+      const modelSelect = document.querySelector('select[name="WhisperModelPref"]');
+      if (modelSelect) {
+        data.WhisperModelPref = modelSelect.value;
+      } else {
+        // Default to whisper-1 if no selection is available
+        data.WhisperModelPref = 'whisper-1';
+      }
+    }
+    
+    // Ensure we have the API key in proper format
+    if (selectedProvider === 'openai' && !data.openAiKey && data.OpenAiKey) {
+      data.openAiKey = data.OpenAiKey;
+    }
+    
+    console.log("Submitting transcription settings:", data);
+    
+    setSaving(true);
+    try {
+      const result = await System.updateSystem(data);
+      console.log("Server response:", result);
+      
+      if (result.error) {
+        showToast(`Failed to save preferences: ${result.error}`, "error");
+      } else {
+        showToast("Transcription preferences saved successfully.", "success");
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      showToast(`An error occurred: ${error.message}`, "error");
+    } finally {
+      setSaving(false);
+      setHasChanges(false);
+    }
   };
 
   const updateProviderChoice = (selection) => {
@@ -130,7 +171,7 @@ export default function TranscriptionModelPreference() {
               <div className="w-full justify-end flex">
                 {hasChanges && (
                   <CTAButton
-                    onClick={() => handleSubmit()}
+                    onClick={handleSubmit}
                     className="mt-3 mr-0 -mb-14 z-10"
                   >
                     {saving ? "Saving..." : "Save changes"}

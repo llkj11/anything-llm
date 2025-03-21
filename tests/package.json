@@ -1,0 +1,10 @@
+{
+  "name": "gpt4o-transcription-tests",
+  "version": "1.0.0",
+  "description": "Tests for GPT-4o transcription models",
+  "type": "commonjs",
+  "private": true,
+  "dependencies": {
+    "openai": "^4.89.0"
+  }
+}
