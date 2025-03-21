@@ -34,6 +34,7 @@ const { getTTSProvider } = require("../utils/TextToSpeech");
 const { WorkspaceThread } = require("../models/workspaceThread");
 const truncate = require("truncate");
 const { purgeDocument } = require("../utils/files/purgeDocument");
+const stripThinkingTags = require("../utils/tts/stripThinkingTags");
 
 function workspaceEndpoints(app) {
   if (!app) return;
@@ -613,7 +614,8 @@ function workspaceEndpoints(app) {
         if (!text) return response.sendStatus(204).end();
 
         const TTSProvider = getTTSProvider();
-        const buffer = await TTSProvider.ttsBuffer(text);
+        const filteredText = stripThinkingTags(text);
+        const buffer = await TTSProvider.ttsBuffer(filteredText);
         if (buffer === null) return response.sendStatus(204).end();
 
         responseCache.set(cacheKey, { buffer, mime: "audio/mpeg" });
