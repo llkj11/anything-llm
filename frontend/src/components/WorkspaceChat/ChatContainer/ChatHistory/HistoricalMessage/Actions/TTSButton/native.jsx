@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { SpeakerHigh, PauseCircle } from "@phosphor-icons/react";
+import {
+  THOUGHT_REGEX_COMPLETE,
+  THOUGHT_REGEX_OPEN,
+  THOUGHT_REGEX_CLOSE,
+} from "../../../ThoughtContainer";
 
 export default function NativeTTSMessage({ message }) {
   const [speaking, setSpeaking] = useState(false);
@@ -14,6 +19,33 @@ export default function NativeTTSMessage({ message }) {
     return;
   }
 
+  function stripThinkingTags(text) {
+    if (!text) return "";
+    
+    // First try to match complete thinking sections (with open and close tags)
+    if (text.match(THOUGHT_REGEX_COMPLETE)) {
+      return text.replace(THOUGHT_REGEX_COMPLETE, "").trim();
+    }
+    
+    // If there's an opening and closing tag but not in the complete pattern format
+    if (text.match(THOUGHT_REGEX_OPEN) && text.match(THOUGHT_REGEX_CLOSE)) {
+      const closingTag = text.match(THOUGHT_REGEX_CLOSE)[0];
+      const splitMessage = text.split(closingTag);
+      // Return everything after the closing tag
+      return splitMessage[1]?.trim() || "";
+    }
+    
+    // If there's just an opening tag with no closing tag, just keep everything after it
+    if (text.match(THOUGHT_REGEX_OPEN)) {
+      const openingTag = text.match(THOUGHT_REGEX_OPEN)[0];
+      const splitMessage = text.split(openingTag);
+      // Return just the original message since the thinking is incomplete
+      return text;
+    }
+    
+    return text;
+  }
+
   function speakMessage() {
     // if the user is pausing this particular message
     // while the synth is speaking we can end it.
@@ -25,7 +57,9 @@ export default function NativeTTSMessage({ message }) {
     }
 
     if (window.speechSynthesis.speaking && !speaking) return;
-    const utterance = new SpeechSynthesisUtterance(message);
+    // Remove thinking tags before speaking
+    const filteredMessage = stripThinkingTags(message);
+    const utterance = new SpeechSynthesisUtterance(filteredMessage);
     utterance.addEventListener("end", endSpeechUtterance);
     window.speechSynthesis.speak(utterance);
     setSpeaking(true);
