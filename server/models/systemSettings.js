@@ -244,6 +244,8 @@ const SystemSettings = {
       TextToSpeechProvider: process.env.TTS_PROVIDER || "native",
       TTSOpenAIKey: !!process.env.TTS_OPEN_AI_KEY,
       TTSOpenAIVoiceModel: process.env.TTS_OPEN_AI_VOICE_MODEL,
+      TTSOpenAIModel: process.env.TTS_OPEN_AI_MODEL || "tts-1",
+      TTSOpenAIInstructions: process.env.TTS_OPEN_AI_INSTRUCTIONS || "",
 
       // Eleven Labs TTS
       TTSElevenLabsKey: !!process.env.TTS_ELEVEN_LABS_KEY,
@@ -257,6 +259,12 @@ const SystemSettings = {
       TTSOpenAICompatibleVoiceModel:
         process.env.TTS_OPEN_AI_COMPATIBLE_VOICE_MODEL,
       TTSOpenAICompatibleEndpoint: process.env.TTS_OPEN_AI_COMPATIBLE_ENDPOINT,
+      // GPT-4o TTS
+      TtsGpt4oKey: !!process.env.TTS_GPT4O_KEY,
+      TtsGpt4oVoice: process.env.TTS_GPT4O_VOICE || "coral",
+      TtsGpt4oModel: process.env.TTS_GPT4O_MODEL || "gpt-4o-mini-tts",
+      TtsGpt4oFormat: process.env.TTS_GPT4O_FORMAT || "mp3",
+      TtsGpt4oInstructions: process.env.TTS_GPT4O_INSTRUCTIONS || "",
 
       // --------------------------------------------------------
       // Agent Settings & Configs

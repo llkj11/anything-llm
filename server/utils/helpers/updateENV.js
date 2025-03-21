@@ -532,6 +532,14 @@ const KEY_MAPPING = {
     envKey: "TTS_OPEN_AI_VOICE_MODEL",
     checks: [],
   },
+  TTSOpenAIModel: {
+    envKey: "TTS_OPEN_AI_MODEL",
+    checks: [],
+  },
+  TTSOpenAIInstructions: {
+    envKey: "TTS_OPEN_AI_INSTRUCTIONS",
+    checks: [],
+  },
 
   // TTS ElevenLabs
   TTSElevenLabsKey: {
@@ -695,7 +703,9 @@ function supportedTTSProvider(input = "") {
     "piper_local",
     "generic-openai",
   ].includes(input);
-  return validSelection ? null : `${input} is not a valid TTS provider.`;
+  if (!validSelection)
+    return `${input} is not a valid TTS provider. Valid options: native, openai, elevenlabs, piper_local, generic-openai`;
+  return null;
 }
 
 function validLocalWhisper(input = "") {
