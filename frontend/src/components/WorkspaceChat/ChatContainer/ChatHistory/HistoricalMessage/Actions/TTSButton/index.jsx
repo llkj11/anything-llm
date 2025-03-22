@@ -3,21 +3,29 @@ import NativeTTSMessage from "./native";
 import AsyncTTSMessage from "./asyncTts";
 import PiperTTSMessage from "./piperTTS";
 import System from "@/models/system";
+import Workspace from "@/models/workspace";
 
 export default function TTSMessage({ slug, chatId, message }) {
   const [settings, setSettings] = useState({});
+  const [workspace, setWorkspace] = useState(null);
   const [provider, setProvider] = useState("native");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function getSettings() {
       const _settings = await System.keys();
-      setProvider(_settings?.TextToSpeechProvider ?? "native");
+      const _workspace = await Workspace.bySlug(slug);
+      
+      // Use workspace-specific TTS provider if available, otherwise use system default
+      const ttsProvider = _workspace?.ttsProvider || _settings?.TextToSpeechProvider || "native";
+      
+      setProvider(ttsProvider);
       setSettings(_settings);
+      setWorkspace(_workspace);
       setLoading(false);
     }
     getSettings();
-  }, []);
+  }, [slug]);
 
   if (!chatId || loading) return null;
 
@@ -27,9 +35,10 @@ export default function TTSMessage({ slug, chatId, message }) {
     case "elevenlabs":
       return <AsyncTTSMessage slug={slug} chatId={chatId} />;
     case "piper_local":
+      // For Piper TTS, use workspace-specific voice model if available
       return (
         <PiperTTSMessage
-          voiceId={settings?.TTSPiperTTSVoiceModel}
+          voiceId={workspace?.ttsPiperTTSModel || settings?.TTSPiperTTSVoiceModel}
           message={message}
         />
       );

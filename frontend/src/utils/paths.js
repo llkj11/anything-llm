@@ -72,6 +72,7 @@ export default {
     thread: (wsSlug, threadSlug) => {
       return `/workspace/${wsSlug}/t/${threadSlug}`;
     },
+    tts: (slug, chatId) => `/workspace/${slug}/tts/${chatId}`,
   },
   apiDocs: () => {
     return `${API_BASE}/docs`;
@@ -184,4 +185,7 @@ export default {
       manage: () => `/settings/beta-features/live-document-sync/manage`,
     },
   },
+
+  // TTS paths
+  tts: (chatId) => `/tts/${chatId}`,
 };

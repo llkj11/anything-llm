@@ -9,6 +9,7 @@ import ChatTemperatureSettings from "./ChatTemperatureSettings";
 import ChatModeSelection from "./ChatModeSelection";
 import WorkspaceLLMSelection from "./WorkspaceLLMSelection";
 import ChatQueryRefusalResponse from "./ChatQueryRefusalResponse";
+import WorkspaceTTSSettings from "./WorkspaceTTSSettings";
 
 export default function ChatSettings({ workspace }) {
   const [settings, setSettings] = useState({});
@@ -74,6 +75,11 @@ export default function ChatSettings({ workspace }) {
           setHasChanges={setHasChanges}
         />
         <ChatTemperatureSettings
+          settings={settings}
+          workspace={workspace}
+          setHasChanges={setHasChanges}
+        />
+        <WorkspaceTTSSettings
           settings={settings}
           workspace={workspace}
           setHasChanges={setHasChanges}

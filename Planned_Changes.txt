@@ -1,0 +1,6 @@
+Upcoming changes for VerbalizeAI/AnythingLLM
+
+Different models per Workspace thread
+Option to change tts method and prompt per workspace instead of just globally
+More themes
+Image Generation tab using APIs and local with ComfyUI

@@ -1,87 +1,97 @@
-import { useEffect, useState, useRef } from "react";
-import { SpeakerHigh, PauseCircle, CircleNotch } from "@phosphor-icons/react";
-import Workspace from "@/models/workspace";
-import showToast from "@/utils/toast";
+import { useState } from "react";
+import { SpeakerHigh, SpeakerSlash, CircleNotch } from "@phosphor-icons/react";
+import paths from "@/utils/paths";
 
 export default function AsyncTTSMessage({ slug, chatId }) {
-  const playerRef = useRef(null);
-  const [speaking, setSpeaking] = useState(false);
+  const [audioPlaying, setAudioPlaying] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [audioSrc, setAudioSrc] = useState(null);
+  const [audio, setAudio] = useState(null);
 
-  function speakMessage() {
-    if (speaking) {
-      playerRef?.current?.pause();
+  const loadAndPlayAudio = async () => {
+    setLoading(true);
+    try {
+      // Try to use the workspace-specific endpoint first
+      let ttsEndpoint = paths.workspace.tts(slug, chatId);
+      const result = await fetch(ttsEndpoint);
+      
+      // If we couldn't find audio with the workspace endpoint, try the global one
+      if (result.status === 404 || result.status === 204) {
+        ttsEndpoint = paths.tts(chatId);
+        const globalResult = await fetch(ttsEndpoint);
+        
+        if (globalResult.status === 404 || globalResult.status === 204) {
+          return; // No audio available with either endpoint
+        }
+        
+        if (!globalResult.ok) {
+          console.error("Failed to fetch TTS audio:", globalResult.status);
+          return;
+        }
+        
+        const blob = await globalResult.blob();
+        playAudio(blob);
+        return;
+      }
+
+      if (!result.ok) {
+        console.error("Failed to fetch TTS audio:", result.status);
+        return;
+      }
+
+      const blob = await result.blob();
+      playAudio(blob);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const playAudio = (blob) => {
+    if (audio) {
+      audio.pause();
+      audio.remove();
+      setAudio(null);
+    }
+
+    const newAudio = document.createElement("audio");
+    newAudio.src = URL.createObjectURL(blob);
+    newAudio.addEventListener("ended", () => {
+      setAudioPlaying(false);
+      newAudio.remove();
+      setAudio(null);
+    });
+    document.body.appendChild(newAudio);
+    setAudio(newAudio);
+    setAudioPlaying(true);
+    newAudio.play();
+  };
+
+  const toggleAudio = () => {
+    if (audioPlaying) {
+      if (audio) {
+        audio.pause();
+        audio.remove();
+        setAudio(null);
+      }
+      setAudioPlaying(false);
       return;
     }
 
-    try {
-      if (!audioSrc) {
-        setLoading(true);
-        Workspace.ttsMessage(slug, chatId)
-          .then((audioBlob) => {
-            if (!audioBlob)
-              throw new Error("Failed to load or play TTS message response.");
-            setAudioSrc(audioBlob);
-          })
-          .catch((e) => showToast(e.message, "error", { clear: true }))
-          .finally(() => setLoading(false));
-      } else {
-        playerRef.current.play();
-      }
-    } catch (e) {
-      console.error(e);
-      setLoading(false);
-      setSpeaking(false);
-    }
-  }
+    loadAndPlayAudio();
+  };
 
-  useEffect(() => {
-    function setupPlayer() {
-      if (!playerRef?.current) return;
-      playerRef.current.addEventListener("play", () => {
-        setSpeaking(true);
-      });
-
-      playerRef.current.addEventListener("pause", () => {
-        playerRef.current.currentTime = 0;
-        setSpeaking(false);
-      });
-    }
-    setupPlayer();
-  }, []);
-
-  if (!chatId) return null;
   return (
-    <div className="mt-3 relative">
-      <button
-        onClick={speakMessage}
-        data-tooltip-id="message-to-speech"
-        data-tooltip-content={
-          speaking ? "Pause TTS speech of message" : "TTS Speak message"
-        }
-        className="border-none text-[var(--theme-sidebar-footer-icon-fill)]"
-        aria-label={speaking ? "Pause speech" : "Speak message"}
-      >
-        {speaking ? (
-          <PauseCircle size={18} className="mb-1" />
-        ) : (
-          <>
-            {loading ? (
-              <CircleNotch size={18} className="mb-1 animate-spin" />
-            ) : (
-              <SpeakerHigh size={18} className="mb-1" />
-            )}
-          </>
-        )}
-        <audio
-          ref={playerRef}
-          hidden={true}
-          src={audioSrc}
-          autoPlay={true}
-          controls={false}
-        />
-      </button>
-    </div>
+    <button
+      onClick={toggleAudio}
+      disabled={loading}
+      className="flex flex-col items-center justify-center rounded-md border-none h-[26px] p-1 text-white/60 hover:bg-slate-700 hover:text-white"
+    >
+      {loading ? (
+        <CircleNotch size={16} className="animate-spin" />
+      ) : audioPlaying ? (
+        <SpeakerSlash size={16} />
+      ) : (
+        <SpeakerHigh size={16} />
+      )}
+    </button>
   );
 }
