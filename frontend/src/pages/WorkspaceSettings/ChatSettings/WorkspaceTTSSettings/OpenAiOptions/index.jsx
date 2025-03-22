@@ -45,51 +45,115 @@ export default function OpenAiOptions({ settings, workspace, setHasChanges }) {
         button.textContent = "Loading...";
       }
       
-      // Test the voice
-      const result = await System.testTTSVoice("openai", {
-        key,
-        voice,
-        model,
-        instructions,
-      });
+      // Create a unique audio tag ID to avoid conflicts
+      const audioElementId = `audio-test-${Date.now()}`;
       
-      if (result.error || !result.audio) {
-        throw new Error(result.error || "Failed to generate TTS");
-      }
-      
-      // Create an audio element to play the TTS
-      const audio = new Audio();
-      
-      // Add error handling for audio playback
-      audio.onerror = (e) => {
-        console.error("Audio playback error:", e);
-        showToast("Error playing the audio. The server may have returned an invalid format.", "error");
-        
-        // Reset button state
-        const button = document.getElementById("test-voice-button");
-        if (button) {
-          button.disabled = false;
-          button.textContent = "Test Voice";
-        }
-      };
-      
-      audio.src = URL.createObjectURL(result.audio);
+      // Add a temporary audio element to the DOM that we can control
+      const audioContainer = document.createElement('div');
+      audioContainer.innerHTML = `<audio id="${audioElementId}" controls style="display: none;"></audio>`;
+      document.body.appendChild(audioContainer);
       
       try {
-        await audio.play();
-      } catch (err) {
-        console.error("Error playing audio:", err);
-        showToast("Failed to play audio: " + err.message, "error");
+        console.log("Starting TTS test request with params:", { provider: "openai", voice, model });
         
-        // Reset button state
+        // Make a direct fetch request to our API endpoint instead of using the System utility
+        const response = await fetch('/api/tts/test-tts', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-anythingllm-auth': localStorage.getItem('authToken') || '',
+          },
+          body: JSON.stringify({
+            provider: "openai",
+            key,
+            voice,
+            model,
+            instructions,
+            text: "This is a test of the text to speech feature. How does this sound?"
+          }),
+        });
+        
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error("TTS test request failed:", response.status, errorText);
+          throw new Error(`Failed to generate TTS: ${errorText}`);
+        }
+        
+        // Get the audio as a blob directly from the response
+        const audioBlob = await response.blob();
+        console.log("Response received. Blob size:", audioBlob.size, "Blob type:", audioBlob.type);
+        
+        if (audioBlob.size === 0) {
+          throw new Error("Received empty audio data");
+        }
+        
+        // Create an audio element and play it
+        const audioElement = document.getElementById(audioElementId);
+        const audioUrl = URL.createObjectURL(audioBlob);
+        
+        // Log what we're trying to play
+        console.log("Created audio URL:", audioUrl);
+        
+        // Set up event handlers
+        audioElement.onerror = (e) => {
+          console.error("Audio element error:", e);
+          showToast(`Audio playback error: ${e.target.error?.message || 'Unknown error'}`, "error");
+          resetButton();
+        };
+        
+        audioElement.oncanplaythrough = () => {
+          console.log("Audio ready to play");
+          audioElement.play().catch(e => {
+            console.error("Play error:", e);
+            showToast(`Couldn't play audio: ${e.message}`, "error");
+            resetButton();
+          });
+        };
+        
+        audioElement.onended = () => {
+          console.log("Audio playback finished");
+          resetButton();
+          // Clean up
+          setTimeout(() => {
+            audioContainer.remove();
+          }, 1000);
+        };
+        
+        // Set the source and load the audio
+        audioElement.src = audioUrl;
+        audioElement.load();
+        
+        // If we don't get a canplaythrough event within 5 seconds, try to play anyway
+        setTimeout(() => {
+          if (audioElement && audioElement.paused) {
+            console.log("Forcing play attempt after timeout");
+            audioElement.play().catch(e => {
+              console.error("Forced play error:", e);
+              showToast(`Couldn't play audio: ${e.message}`, "error");
+              resetButton();
+            });
+          }
+        }, 5000);
+        
+      } catch (err) {
+        console.error("Error in TTS test:", err);
+        showToast(`Error: ${err.message}`, "error");
+        resetButton();
+        // Clean up
+        audioContainer.remove();
+      }
+      
+      function resetButton() {
         const button = document.getElementById("test-voice-button");
         if (button) {
           button.disabled = false;
           button.textContent = "Test Voice";
         }
       }
+      
     } catch (error) {
-      showToast(error.message || "Failed to test voice", "error");
+      console.error("Top-level error in testVoice:", error);
+      showToast(`Error: ${error.message}`, "error");
       
       // Reset button state
       const button = document.getElementById("test-voice-button");

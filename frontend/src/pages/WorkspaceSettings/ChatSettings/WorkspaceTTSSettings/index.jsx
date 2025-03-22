@@ -92,9 +92,10 @@ const PROVIDERS = [
 export default function WorkspaceTTSSettings({ settings, workspace, setHasChanges }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredProviders, setFilteredProviders] = useState(PROVIDERS);
-  const [selectedProvider, setSelectedProvider] = useState(
-    workspace?.ttsProvider || null
-  );
+  const [selectedProvider, setSelectedProvider] = useState(() => {
+    console.log("Initializing selectedProvider with value:", workspace?.ttsProvider);
+    return workspace?.ttsProvider || null;
+  });
   const [searchMenuOpen, setSearchMenuOpen] = useState(false);
   const searchInputRef = useRef(null);
   const dropdownRef = useRef(null);
@@ -333,7 +334,7 @@ export default function WorkspaceTTSSettings({ settings, workspace, setHasChange
         <input 
           type="hidden" 
           name="ttsProvider" 
-          value={selectedProvider || ""} 
+          value={selectedProvider === null ? "" : selectedProvider} 
         />
 
         {selectedProvider &&

@@ -28,34 +28,80 @@ export default function ChatSettings({ workspace }) {
   const handleUpdate = async (e) => {
     setSaving(true);
     e.preventDefault();
-    const data = {};
-    const form = new FormData(formEl.current);
     
-    console.log("Form data before processing:", Array.from(form.entries()));
-    
-    // Make sure we correctly handle the ttsProvider field (could be empty string)
-    for (var [key, value] of form.entries()) {
-      // Special handling for ttsProvider - null instead of empty string
-      if (key === 'ttsProvider' && value === '') {
-        data[key] = null;
-      } else {
-        data[key] = castToType(key, value);
+    try {
+      const data = {};
+      const form = new FormData(formEl.current);
+      
+      console.log("Raw form data:", Array.from(form.entries()));
+      
+      // Make sure we handle all fields properly
+      for (var [key, value] of form.entries()) {
+        // Handle empty/special values
+        if (key === 'ttsProvider' && value === '') {
+          data[key] = null;
+        } else if (value === '' && ['chatProvider', 'chatModel'].includes(key)) {
+          // Handle empty string values for critical chat settings
+          console.log(`Empty value detected for ${key}, using default value`);
+          data[key] = key === 'chatProvider' ? 'default' : '';
+        } else if (key === 'ttsOpenAiKey' && value.startsWith('*')) {
+          // Skip masked API key if it hasn't been changed (just asterisks)
+          console.log('Skipping masked API key that was not changed');
+        } else {
+          data[key] = castToType(key, value);
+        }
       }
+      
+      // Ensure we have all needed TTS values
+      if (data.ttsProvider === 'openai') {
+        if (!data.ttsOpenAiKey && workspace?.ttsOpenAiKey) {
+          // Keep the existing key if the form just shows asterisks
+          data.ttsOpenAiKey = workspace.ttsOpenAiKey;
+          console.log('Preserving existing API key');
+        }
+        
+        // Ensure we have voice and model
+        if (!data.ttsOpenAiVoiceModel) {
+          data.ttsOpenAiVoiceModel = workspace?.ttsOpenAiVoiceModel || 'alloy';
+        }
+        
+        if (!data.ttsOpenAiModel) {
+          data.ttsOpenAiModel = workspace?.ttsOpenAiModel || 'tts-1';
+        }
+      }
+      
+      console.log("Processed data being sent to server:", {...data, ttsOpenAiKey: data.ttsOpenAiKey ? '***' : undefined});
+      
+      const { workspace: updatedWorkspace, message } = await Workspace.update(
+        workspace.slug,
+        data
+      );
+      
+      if (!!updatedWorkspace) {
+        console.log("Workspace updated successfully:", {
+          ...updatedWorkspace,
+          ttsOpenAiKey: updatedWorkspace.ttsOpenAiKey ? '***' : undefined
+        });
+        
+        showToast("Workspace updated!", "success", { clear: true });
+        
+        // Reload with a clear cache to ensure fresh data
+        setTimeout(() => {
+          console.log("Reloading page to apply new settings");
+          // Force a hard refresh to clear any caches
+          window.location.href = window.location.href.split('?')[0] + '?refresh=' + Date.now();
+        }, 800);
+      } else {
+        console.error("Error updating workspace:", message);
+        showToast(`Error: ${message}`, "error", { clear: true });
+      }
+    } catch (err) {
+      console.error("Exception updating workspace:", err);
+      showToast(`Error: ${err.message}`, "error", { clear: true });
+    } finally {
+      setSaving(false);
+      setHasChanges(false);
     }
-    
-    console.log("Processed data being sent to server:", data);
-    
-    const { workspace: updatedWorkspace, message } = await Workspace.update(
-      workspace.slug,
-      data
-    );
-    if (!!updatedWorkspace) {
-      showToast("Workspace updated!", "success", { clear: true });
-    } else {
-      showToast(`Error: ${message}`, "error", { clear: true });
-    }
-    setSaving(false);
-    setHasChanges(false);
   };
 
   if (!workspace) return null;

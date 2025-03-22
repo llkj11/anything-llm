@@ -78,20 +78,33 @@ function ttsEndpoints(app) {
             });
         }
 
-        const buffer = await ttsProvider.ttsBuffer(text);
-        
-        if (!buffer) {
-          console.error("Failed to generate audio buffer for TTS");
+        try {
+          console.log("Requesting TTS buffer...");
+          const buffer = await ttsProvider.ttsBuffer(text);
+          
+          if (!buffer || buffer.length === 0) {
+            console.error("TTS provider returned empty buffer");
+            return response.status(500).json({
+              message: "Failed to generate audio - empty buffer received",
+            });
+          }
+          
+          console.log(`TTS buffer generated successfully: ${buffer.length} bytes`);
+          
+          // Send as audio file with proper MIME type
+          response.setHeader("Content-Type", "audio/mpeg");
+          response.setHeader("Content-Length", buffer.length);
+          response.setHeader("Cache-Control", "no-cache");
+          
+          // Send the buffer
+          return response.status(200).send(buffer);
+          
+        } catch (providerError) {
+          console.error("TTS provider error:", providerError);
           return response.status(500).json({
-            message: "Failed to generate audio",
+            message: `TTS provider error: ${providerError.message}`,
           });
         }
-
-        console.log("TTS buffer generated successfully, sending response");
-        response.writeHead(200, {
-          "Content-Type": "audio/mpeg",
-        });
-        response.end(buffer);
       } catch (error) {
         console.error("Error testing TTS:", error);
         response.status(500).json({

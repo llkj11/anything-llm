@@ -260,7 +260,10 @@ const Workspace = {
   update: async function (id = null, updates = {}) {
     if (!id) throw new Error("No workspace id provided for update");
 
+    console.log("Updating workspace with ID:", id, "Updates:", JSON.stringify(updates, null, 2));
     const validatedUpdates = this.validateFields(updates);
+    console.log("Validated updates:", JSON.stringify(validatedUpdates, null, 2));
+    
     if (Object.keys(validatedUpdates).length === 0)
       return { workspace: { id }, message: "No valid fields to update!" };
 
