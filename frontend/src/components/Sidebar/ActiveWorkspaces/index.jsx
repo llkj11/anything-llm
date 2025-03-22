@@ -55,9 +55,7 @@ export default function ActiveWorkspaces() {
             role="listitem"
           >
             <div className="flex gap-x-2 items-center justify-between">
-              <a
-                href={isActive ? null : paths.workspace.chat(workspace.slug)}
-                aria-current={isActive ? "page" : ""}
+              <div
                 className={`
                   transition-all duration-[200ms]
                   flex flex-grow w-[75%] gap-x-2 py-[6px] px-[12px] rounded-[4px] text-white justify-start items-center
@@ -132,7 +130,7 @@ export default function ActiveWorkspaces() {
                     </div>
                   )}
                 </div>
-              </a>
+              </div>
             </div>
             {isActive && (
               <ThreadContainer workspace={workspace} isActive={isActive} />

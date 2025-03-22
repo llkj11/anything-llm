@@ -18,7 +18,7 @@ function ttsEndpoints(app) {
    * @returns {buffer} - Audio buffer
    */
   app.post(
-    "/test-tts",
+    "/tts/test-tts",
     [validatedRequest, flexUserRoleValid([ROLES.all])],
     async function (request, response) {
       try {

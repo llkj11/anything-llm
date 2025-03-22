@@ -1,5 +1,6 @@
 import { useState } from "react";
 import showToast from "@/utils/toast";
+import System from "@/models/system";
 
 function toProperCase(string) {
   return string.replace(/\w\S*/g, function (txt) {
@@ -36,12 +37,6 @@ export default function OpenAiOptions({ settings, workspace, setHasChanges }) {
         return;
       }
       
-      // Sample text for testing
-      const testText = "This is a test of the OpenAI text to speech feature. How does this sound?";
-      
-      // Create an audio element to play the TTS
-      const audio = new Audio();
-      
       // Set loading state
       const button = document.getElementById("test-voice-button");
       if (button) {
@@ -49,28 +44,21 @@ export default function OpenAiOptions({ settings, workspace, setHasChanges }) {
         button.textContent = "Loading...";
       }
       
-      // Directly create a simple backend test endpoint request
-      const response = await fetch("/api/test-tts", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          provider: "openai",
-          key,
-          voice,
-          model,
-          instructions,
-          text: testText
-        }),
+      // Test the voice
+      const result = await System.testTTSVoice("openai", {
+        key,
+        voice,
+        model,
+        instructions,
       });
       
-      if (!response.ok) {
-        throw new Error("Failed to generate TTS");
+      if (result.error || !result.audio) {
+        throw new Error(result.error || "Failed to generate TTS");
       }
       
-      const audioBlob = await response.blob();
-      audio.src = URL.createObjectURL(audioBlob);
+      // Create an audio element to play the TTS
+      const audio = new Audio();
+      audio.src = URL.createObjectURL(result.audio);
       audio.play();
       
       // Reset button state

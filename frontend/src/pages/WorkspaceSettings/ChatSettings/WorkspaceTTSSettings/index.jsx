@@ -204,6 +204,13 @@ export default function WorkspaceTTSSettings({ settings, workspace, setHasChange
     };
   }, [searchMenuOpen]);
 
+  useEffect(() => {
+    // Update hasChanges if the selectedProvider changes
+    if (selectedProvider !== workspace?.ttsProvider) {
+      setHasChanges(true);
+    }
+  }, [selectedProvider, workspace?.ttsProvider, setHasChanges]);
+
   const selectedProviderObject = PROVIDERS.find(
     (provider) => provider.value === selectedProvider
   );

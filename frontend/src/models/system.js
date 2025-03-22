@@ -750,6 +750,38 @@ const System = {
     liveSync: LiveDocumentSync,
     agentPlugins: AgentPlugins,
   },
+
+  // Test TTS voice with custom settings
+  testTTSVoice: async function (provider, settings) {
+    try {
+      const response = await fetch(`/api/tts/test-tts`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          provider,
+          ...settings,
+          text: "This is a test of the text to speech feature. How does this sound?"
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to test TTS voice");
+      }
+
+      return {
+        audio: await response.blob(),
+        error: null,
+      };
+    } catch (error) {
+      console.error("Error testing TTS voice", error);
+      return {
+        audio: null,
+        error: error.message,
+      };
+    }
+  },
 };
 
 export default System;

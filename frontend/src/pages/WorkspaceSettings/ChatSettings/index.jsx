@@ -30,7 +30,17 @@ export default function ChatSettings({ workspace }) {
     e.preventDefault();
     const data = {};
     const form = new FormData(formEl.current);
-    for (var [key, value] of form.entries()) data[key] = castToType(key, value);
+    
+    // Make sure we correctly handle the ttsProvider field (could be empty string)
+    for (var [key, value] of form.entries()) {
+      // Special handling for ttsProvider - null instead of empty string
+      if (key === 'ttsProvider' && value === '') {
+        data[key] = null;
+      } else {
+        data[key] = castToType(key, value);
+      }
+    }
+    
     const { workspace: updatedWorkspace, message } = await Workspace.update(
       workspace.slug,
       data
