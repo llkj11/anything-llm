@@ -613,7 +613,7 @@ function workspaceEndpoints(app) {
         const text = safeJsonParse(wsChat.response, null)?.text;
         if (!text) return response.sendStatus(204).end();
 
-        const TTSProvider = getTTSProvider();
+        const TTSProvider = getTTSProvider(workspace);
         const filteredText = stripThinkingTags(text);
         const buffer = await TTSProvider.ttsBuffer(filteredText);
         if (buffer === null) return response.sendStatus(204).end();

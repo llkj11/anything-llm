@@ -16,6 +16,12 @@ const { writeResponseChunk } = require("../utils/helpers/chat/responses");
 const { WorkspaceThread } = require("../models/workspaceThread");
 const { User } = require("../models/user");
 const truncate = require("truncate");
+const { WorkspaceChats } = require("../models/workspaceChats");
+const { Workspace } = require("../models/workspace");
+const { responseCache } = require("../utils/helpers/responseCache");
+const { getTTSProvider } = require("../utils/TextToSpeech");
+const { safeJsonParse } = require("../utils/helpers/safeJsonParse");
+const stripThinkingTags = require("../utils/tts/stripThinkingTags");
 
 function chatEndpoints(app) {
   if (!app) return;
@@ -202,6 +208,52 @@ function chatEndpoints(app) {
           error: e.message,
         });
         response.end();
+      }
+    }
+  );
+
+  app.get(
+    "/tts/:chatId",
+    [validatedRequest, flexUserRoleValid([ROLES.all])],
+    async function (request, response) {
+      try {
+        const { chatId } = request.params;
+        const { user } = request;
+        const cacheKey = `${user.id}:${chatId}`;
+        const wsChat = await WorkspaceChats.get({ id: Number(chatId) });
+        
+        if (!wsChat) return response.sendStatus(404).end();
+
+        // Get the workspace for TTS settings
+        const workspace = await Workspace.get({ id: wsChat.workspaceId });
+
+        const cachedResponse = responseCache.get(cacheKey);
+        if (cachedResponse) {
+          response.writeHead(200, {
+            "Content-Type": cachedResponse.mime || "audio/mpeg",
+          });
+          response.end(cachedResponse.buffer);
+          return;
+        }
+
+        const text = safeJsonParse(wsChat.response, null)?.text;
+        if (!text) return response.sendStatus(204).end();
+
+        // Pass workspace to get workspace-specific TTS settings if available
+        const TTSProvider = getTTSProvider(workspace);
+        const filteredText = stripThinkingTags(text);
+        const buffer = await TTSProvider.ttsBuffer(filteredText);
+        if (buffer === null) return response.sendStatus(204).end();
+
+        responseCache.set(cacheKey, { buffer, mime: "audio/mpeg" });
+        response.writeHead(200, {
+          "Content-Type": "audio/mpeg",
+        });
+        response.end(buffer);
+        return;
+      } catch (error) {
+        console.error("Error processing the TTS request:", error);
+        response.status(500).json({ message: "TTS could not be completed" });
       }
     }
   );

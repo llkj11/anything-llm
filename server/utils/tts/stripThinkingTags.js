@@ -24,12 +24,12 @@ const THOUGHT_REGEX_COMPLETE = new RegExp(
  */
 function stripThinkingTags(text) {
   if (!text) return "";
-  
+   
   // First try to match complete thinking sections (with open and close tags)
   if (text.match(THOUGHT_REGEX_COMPLETE)) {
     return text.replace(THOUGHT_REGEX_COMPLETE, "").trim();
   }
-  
+   
   // If there's an opening and closing tag but not in the complete pattern format
   if (text.match(THOUGHT_REGEX_OPEN) && text.match(THOUGHT_REGEX_CLOSE)) {
     const closingTag = text.match(THOUGHT_REGEX_CLOSE)[0];
@@ -37,7 +37,7 @@ function stripThinkingTags(text) {
     // Return everything after the closing tag
     return splitMessage[1]?.trim() || "";
   }
-  
+   
   // If there's just an opening tag with no closing tag, just keep everything after it
   if (text.match(THOUGHT_REGEX_OPEN)) {
     const openingTag = text.match(THOUGHT_REGEX_OPEN)[0];
@@ -45,7 +45,7 @@ function stripThinkingTags(text) {
     // Return just the original message since the thinking is incomplete
     return text;
   }
-  
+   
   return text;
 }
 

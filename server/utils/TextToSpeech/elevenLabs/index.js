@@ -1,18 +1,21 @@
 const { ElevenLabsClient, stream } = require("elevenlabs");
 
 class ElevenLabsTTS {
-  constructor() {
-    if (!process.env.TTS_ELEVEN_LABS_KEY)
-      throw new Error("No ElevenLabs API key was set.");
+  constructor(workspace = null) {
+    // Use workspace-specific settings if available, otherwise use global settings
+    const apiKey = workspace?.ttsElevenLabsKey || process.env.TTS_ELEVEN_LABS_KEY;
+    if (!apiKey) throw new Error("No ElevenLabs API key was set.");
+    
     this.elevenLabs = new ElevenLabsClient({
-      apiKey: process.env.TTS_ELEVEN_LABS_KEY,
+      apiKey: apiKey,
     });
 
-    // Rachel as default voice
+    // Rachel as default voice if not specified
     // https://api.elevenlabs.io/v1/voices
-    this.voiceId =
-      process.env.TTS_ELEVEN_LABS_VOICE_MODEL ?? "21m00Tcm4TlvDq8ikWAM";
-    this.modelId = process.env.TTS_ELEVEN_LABS_MODEL ?? "eleven_multilingual_v2";
+    this.voiceId = workspace?.ttsElevenLabsVoiceModel || 
+                  process.env.TTS_ELEVEN_LABS_VOICE_MODEL || 
+                  "21m00Tcm4TlvDq8ikWAM";
+    this.modelId = process.env.TTS_ELEVEN_LABS_MODEL || "eleven_multilingual_v2";
   }
 
   static async voices(apiKey = null) {

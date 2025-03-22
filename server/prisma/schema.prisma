@@ -139,6 +139,17 @@ model workspaces {
   agentModel                   String?
   queryRefusalResponse         String?
   vectorSearchMode             String?                        @default("default")
+  ttsProvider                  String?
+  ttsOpenAiKey                 String?
+  ttsOpenAiVoiceModel          String?
+  ttsOpenAiModel               String?
+  ttsOpenAiInstructions        String?
+  ttsElevenLabsKey             String?
+  ttsElevenLabsVoiceModel      String?
+  ttsOpenAiCompatibleEndpoint  String?
+  ttsOpenAiCompatibleKey       String?
+  ttsOpenAiCompatibleVoiceModel String?
+  ttsPiperTTSModel             String?
   workspace_users              workspace_users[]
   documents                    workspace_documents[]
   workspace_suggested_messages workspace_suggested_messages[]

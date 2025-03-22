@@ -1,16 +1,26 @@
+const { OpenAI } = require("openai");
+
 class OpenAiTTS {
-  constructor() {
-    if (!process.env.TTS_OPEN_AI_KEY)
-      throw new Error("No OpenAI API key was set.");
-    const { OpenAI: OpenAIApi } = require("openai");
-    this.openai = new OpenAIApi({
-      apiKey: process.env.TTS_OPEN_AI_KEY,
+  constructor(workspace = null) {
+    // Use workspace-specific settings if available, otherwise use global settings
+    const apiKey = workspace?.ttsOpenAiKey || process.env.TTS_OPEN_AI_KEY;
+    if (!apiKey) throw new Error("No OpenAI API key was set.");
+    
+    this.openai = new OpenAI({
+      apiKey,
     });
-    this.voice = process.env.TTS_OPEN_AI_VOICE_MODEL ?? "alloy";
-    this.model = process.env.TTS_OPEN_AI_MODEL ?? "tts-1";
-    this.instructions = process.env.TTS_OPEN_AI_INSTRUCTIONS || "";
+    
+    // Use workspace-specific settings if available, otherwise use global settings
+    this.voice = workspace?.ttsOpenAiVoiceModel || process.env.TTS_OPEN_AI_VOICE_MODEL || "alloy";
+    this.model = workspace?.ttsOpenAiModel || process.env.TTS_OPEN_AI_MODEL || "tts-1";
+    this.instructions = workspace?.ttsOpenAiInstructions || process.env.TTS_OPEN_AI_INSTRUCTIONS || null;
   }
 
+  /**
+   * Generates a buffer from the given text input using OpenAI TTS.
+   * @param {string} textInput - The text to be converted to audio.
+   * @returns {Promise<Buffer>} A buffer containing the audio data.
+   */
   async ttsBuffer(textInput) {
     try {
       const options = {
@@ -19,18 +29,15 @@ class OpenAiTTS {
         input: textInput,
       };
 
-      // Add instructions for GPT-4o mini TTS model if provided
-      if (this.model === "gpt-4o-mini-tts" && this.instructions && this.instructions.trim().length > 0) {
+      // Only add instructions for the GPT-4o mini TTS model
+      if (this.model === "gpt-4o-mini-tts" && this.instructions) {
         options.instructions = this.instructions;
-        console.log(`[OpenAiTTS] Using voice instructions: ${this.instructions.substring(0, 50)}${this.instructions.length > 50 ? '...' : ''}`);
       }
 
-      console.log(`[OpenAiTTS] Generating speech with model ${this.model}, voice ${this.voice}`);
-      const result = await this.openai.audio.speech.create(options);
-      return Buffer.from(await result.arrayBuffer());
+      const mp3 = await this.openai.audio.speech.create(options);
+      return Buffer.from(await mp3.arrayBuffer());
     } catch (e) {
-      console.error("[OpenAiTTS] Error generating speech:", e);
-      console.error(e.message);
+      console.error(e);
     }
     return null;
   }

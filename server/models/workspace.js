@@ -35,6 +35,17 @@ const Workspace = {
     "agentModel",
     "queryRefusalResponse",
     "vectorSearchMode",
+    "ttsProvider",
+    "ttsOpenAiKey",
+    "ttsOpenAiVoiceModel",
+    "ttsOpenAiModel",
+    "ttsOpenAiInstructions",
+    "ttsElevenLabsKey",
+    "ttsElevenLabsVoiceModel",
+    "ttsOpenAiCompatibleEndpoint",
+    "ttsOpenAiCompatibleKey",
+    "ttsOpenAiCompatibleVoiceModel",
+    "ttsPiperTTSModel",
   ],
 
   validations: {
@@ -108,6 +119,53 @@ const Workspace = {
       )
         return "default";
       return value;
+    },
+    ttsProvider: (value) => {
+      if (!value || typeof value !== "string" || value === "none") return null;
+      return String(value);
+    },
+    ttsOpenAiKey: (value) => {
+      if (!value || typeof value !== "string") return null;
+      if (value === "*".repeat(20)) return undefined; // Don't update if it's the masked value
+      return String(value);
+    },
+    ttsOpenAiVoiceModel: (value) => {
+      if (!value || typeof value !== "string") return null;
+      return String(value);
+    },
+    ttsOpenAiModel: (value) => {
+      if (!value || typeof value !== "string") return null;
+      return String(value);
+    },
+    ttsOpenAiInstructions: (value) => {
+      if (!value || typeof value !== "string") return null;
+      return String(value);
+    },
+    ttsElevenLabsKey: (value) => {
+      if (!value || typeof value !== "string") return null;
+      if (value === "*".repeat(20)) return undefined; // Don't update if it's the masked value
+      return String(value);
+    },
+    ttsElevenLabsVoiceModel: (value) => {
+      if (!value || typeof value !== "string") return null;
+      return String(value);
+    },
+    ttsOpenAiCompatibleEndpoint: (value) => {
+      if (!value || typeof value !== "string") return null;
+      return String(value);
+    },
+    ttsOpenAiCompatibleKey: (value) => {
+      if (!value || typeof value !== "string") return null;
+      if (value === "*".repeat(20)) return undefined; // Don't update if it's the masked value
+      return String(value);
+    },
+    ttsOpenAiCompatibleVoiceModel: (value) => {
+      if (!value || typeof value !== "string") return null;
+      return String(value);
+    },
+    ttsPiperTTSModel: (value) => {
+      if (!value || typeof value !== "string") return null;
+      return String(value);
     },
   },
 

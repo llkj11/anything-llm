@@ -1,24 +1,30 @@
 class GenericOpenAiTTS {
-  constructor() {
-    if (!process.env.TTS_OPEN_AI_COMPATIBLE_KEY)
+  constructor(workspace = null) {
+    // Use workspace-specific settings if available, otherwise use global settings
+    const apiKey = workspace?.ttsOpenAiCompatibleKey || process.env.TTS_OPEN_AI_COMPATIBLE_KEY;
+    const endpoint = workspace?.ttsOpenAiCompatibleEndpoint || process.env.TTS_OPEN_AI_COMPATIBLE_ENDPOINT;
+    
+    if (!apiKey) {
       this.#log(
         "No OpenAI compatible API key was set. You might need to set this to use your OpenAI compatible TTS service."
       );
-    if (!process.env.TTS_OPEN_AI_COMPATIBLE_VOICE_MODEL)
-      this.#log(
-        "No OpenAI compatible voice model was set. We will use the default voice model 'alloy'. This may not exist for your selected endpoint."
-      );
-    if (!process.env.TTS_OPEN_AI_COMPATIBLE_ENDPOINT)
+    }
+    
+    if (!endpoint) {
       throw new Error(
         "No OpenAI compatible endpoint was set. Please set this to use your OpenAI compatible TTS service."
       );
+    }
 
     const { OpenAI: OpenAIApi } = require("openai");
     this.openai = new OpenAIApi({
-      apiKey: process.env.TTS_OPEN_AI_COMPATIBLE_KEY || null,
-      baseURL: process.env.TTS_OPEN_AI_COMPATIBLE_ENDPOINT,
+      apiKey: apiKey || null,
+      baseURL: endpoint,
     });
-    this.voice = process.env.TTS_OPEN_AI_COMPATIBLE_VOICE_MODEL ?? "alloy";
+    
+    this.voice = workspace?.ttsOpenAiCompatibleVoiceModel || 
+                process.env.TTS_OPEN_AI_COMPATIBLE_VOICE_MODEL || 
+                "alloy";
   }
 
   #log(text, ...args) {
