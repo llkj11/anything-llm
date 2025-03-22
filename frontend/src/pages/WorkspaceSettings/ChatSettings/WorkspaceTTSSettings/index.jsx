@@ -116,6 +116,7 @@ export default function WorkspaceTTSSettings({ settings, workspace, setHasChange
   `;
 
   const updateProviderChoice = (selection) => {
+    console.log("Updating provider choice:", selection);
     setSearchQuery("");
     setSelectedProvider(selection);
     setSearchMenuOpen(false);
@@ -205,8 +206,10 @@ export default function WorkspaceTTSSettings({ settings, workspace, setHasChange
   }, [searchMenuOpen]);
 
   useEffect(() => {
-    // Update hasChanges if the selectedProvider changes
+    // Update hasChanges if the selectedProvider changes or is different from workspace.ttsProvider
     if (selectedProvider !== workspace?.ttsProvider) {
+      console.log("TTS provider changed:", 
+        { previous: workspace?.ttsProvider, current: selectedProvider });
       setHasChanges(true);
     }
   }, [selectedProvider, workspace?.ttsProvider, setHasChanges]);

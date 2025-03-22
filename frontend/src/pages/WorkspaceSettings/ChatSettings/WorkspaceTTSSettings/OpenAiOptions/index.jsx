@@ -18,6 +18,7 @@ export default function OpenAiOptions({ settings, workspace, setHasChanges }) {
   
   // Track form changes
   const handleChange = () => {
+    console.log("TTS options changed, updating form");
     if (setHasChanges) setHasChanges(true);
   };
 
@@ -58,13 +59,34 @@ export default function OpenAiOptions({ settings, workspace, setHasChanges }) {
       
       // Create an audio element to play the TTS
       const audio = new Audio();
-      audio.src = URL.createObjectURL(result.audio);
-      audio.play();
       
-      // Reset button state
-      if (button) {
-        button.disabled = false;
-        button.textContent = "Test Voice";
+      // Add error handling for audio playback
+      audio.onerror = (e) => {
+        console.error("Audio playback error:", e);
+        showToast("Error playing the audio. The server may have returned an invalid format.", "error");
+        
+        // Reset button state
+        const button = document.getElementById("test-voice-button");
+        if (button) {
+          button.disabled = false;
+          button.textContent = "Test Voice";
+        }
+      };
+      
+      audio.src = URL.createObjectURL(result.audio);
+      
+      try {
+        await audio.play();
+      } catch (err) {
+        console.error("Error playing audio:", err);
+        showToast("Failed to play audio: " + err.message, "error");
+        
+        // Reset button state
+        const button = document.getElementById("test-voice-button");
+        if (button) {
+          button.disabled = false;
+          button.textContent = "Test Voice";
+        }
       }
     } catch (error) {
       showToast(error.message || "Failed to test voice", "error");

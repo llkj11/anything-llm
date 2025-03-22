@@ -31,6 +31,8 @@ export default function ChatSettings({ workspace }) {
     const data = {};
     const form = new FormData(formEl.current);
     
+    console.log("Form data before processing:", Array.from(form.entries()));
+    
     // Make sure we correctly handle the ttsProvider field (could be empty string)
     for (var [key, value] of form.entries()) {
       // Special handling for ttsProvider - null instead of empty string
@@ -40,6 +42,8 @@ export default function ChatSettings({ workspace }) {
         data[key] = castToType(key, value);
       }
     }
+    
+    console.log("Processed data being sent to server:", data);
     
     const { workspace: updatedWorkspace, message } = await Workspace.update(
       workspace.slug,

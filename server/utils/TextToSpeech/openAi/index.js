@@ -34,12 +34,17 @@ class OpenAiTTS {
         options.instructions = this.instructions;
       }
 
+      console.log(`Generating OpenAI TTS with model ${this.model}, voice ${this.voice}`);
+      
       const mp3 = await this.openai.audio.speech.create(options);
+      console.log("OpenAI TTS response received successfully");
+      
       return Buffer.from(await mp3.arrayBuffer());
     } catch (e) {
-      console.error(e);
+      console.error("OpenAI TTS Error:", e);
+      console.error(e.message);
+      return null;
     }
-    return null;
   }
 }
 

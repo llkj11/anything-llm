@@ -758,6 +758,7 @@ const System = {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          ...baseHeaders(),
         },
         body: JSON.stringify({
           provider,

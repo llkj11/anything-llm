@@ -22,9 +22,11 @@ function ttsEndpoints(app) {
     [validatedRequest, flexUserRoleValid([ROLES.all])],
     async function (request, response) {
       try {
+        console.log("Test TTS request received:", request.body);
         const { provider, text, ...params } = request.body;
         
         if (!provider || !text) {
+          console.error("Missing required parameters:", { provider, text });
           return response.status(400).json({
             message: "Missing required parameters",
           });
@@ -36,6 +38,12 @@ function ttsEndpoints(app) {
         switch (provider) {
           case "openai":
             const { key, voice, model, instructions } = params;
+            console.log("Creating OpenAI TTS provider with settings:", {
+              key: key ? "***" : "not provided",
+              voice,
+              model,
+              instructions: instructions ? "provided" : "not provided"
+            });
             const customSettings = {
               ttsOpenAiKey: key,
               ttsOpenAiVoiceModel: voice || "alloy",
@@ -73,11 +81,13 @@ function ttsEndpoints(app) {
         const buffer = await ttsProvider.ttsBuffer(text);
         
         if (!buffer) {
+          console.error("Failed to generate audio buffer for TTS");
           return response.status(500).json({
             message: "Failed to generate audio",
           });
         }
 
+        console.log("TTS buffer generated successfully, sending response");
         response.writeHead(200, {
           "Content-Type": "audio/mpeg",
         });
