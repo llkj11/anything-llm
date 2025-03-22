@@ -1,4 +1,5 @@
 import { useState } from "react";
+import showToast from "@/utils/toast";
 
 function toProperCase(string) {
   return string.replace(/\w\S*/g, function (txt) {
@@ -6,13 +7,88 @@ function toProperCase(string) {
   });
 }
 
-export default function OpenAiOptions({ settings, workspace }) {
+export default function OpenAiOptions({ settings, workspace, setHasChanges }) {
   const apiKey = workspace?.ttsOpenAiKey || settings?.TTSOpenAIKey;
   const [selectedModel, setSelectedModel] = useState(
     workspace?.ttsOpenAiModel || settings?.TTSOpenAIModel || "tts-1"
   );
   const [instructionsExpanded, setInstructionsExpanded] = useState(false);
   const showInstructions = selectedModel === "gpt-4o-mini-tts";
+  
+  // Track form changes
+  const handleChange = () => {
+    if (setHasChanges) setHasChanges(true);
+  };
+
+  const testVoice = async () => {
+    try {
+      // Get form values
+      const formElement = document.getElementById("chat-settings-form");
+      const formData = new FormData(formElement);
+      const key = formData.get("ttsOpenAiKey") || settings?.TTSOpenAIKey;
+      const voice = formData.get("ttsOpenAiVoiceModel") || "alloy";
+      const model = formData.get("ttsOpenAiModel") || "tts-1";
+      const instructions = model === "gpt-4o-mini-tts" ? 
+        (formData.get("ttsOpenAiInstructions") || "") : "";
+      
+      if (!key) {
+        showToast("Please provide an OpenAI API key", "warning");
+        return;
+      }
+      
+      // Sample text for testing
+      const testText = "This is a test of the OpenAI text to speech feature. How does this sound?";
+      
+      // Create an audio element to play the TTS
+      const audio = new Audio();
+      
+      // Set loading state
+      const button = document.getElementById("test-voice-button");
+      if (button) {
+        button.disabled = true;
+        button.textContent = "Loading...";
+      }
+      
+      // Directly create a simple backend test endpoint request
+      const response = await fetch("/api/test-tts", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          provider: "openai",
+          key,
+          voice,
+          model,
+          instructions,
+          text: testText
+        }),
+      });
+      
+      if (!response.ok) {
+        throw new Error("Failed to generate TTS");
+      }
+      
+      const audioBlob = await response.blob();
+      audio.src = URL.createObjectURL(audioBlob);
+      audio.play();
+      
+      // Reset button state
+      if (button) {
+        button.disabled = false;
+        button.textContent = "Test Voice";
+      }
+    } catch (error) {
+      showToast(error.message || "Failed to test voice", "error");
+      
+      // Reset button state
+      const button = document.getElementById("test-voice-button");
+      if (button) {
+        button.disabled = false;
+        button.textContent = "Test Voice";
+      }
+    }
+  };
 
   return (
     <div className="flex flex-col gap-y-4 mt-1.5">
@@ -30,6 +106,7 @@ export default function OpenAiOptions({ settings, workspace }) {
             required={false}
             autoComplete="off"
             spellCheck={false}
+            onChange={handleChange}
           />
         </div>
         <div className="flex flex-col w-60">
@@ -40,6 +117,7 @@ export default function OpenAiOptions({ settings, workspace }) {
             name="ttsOpenAiVoiceModel"
             defaultValue={workspace?.ttsOpenAiVoiceModel || settings?.TTSOpenAIVoiceModel || "alloy"}
             className="border-none bg-theme-settings-input-bg border-gray-500 text-white text-sm rounded-lg block w-full p-2.5"
+            onChange={handleChange}
           >
             {["alloy", "echo", "fable", "onyx", "nova", "shimmer", "coral"].map(
               (voice) => {
@@ -62,12 +140,25 @@ export default function OpenAiOptions({ settings, workspace }) {
             name="ttsOpenAiModel"
             defaultValue={workspace?.ttsOpenAiModel || settings?.TTSOpenAIModel || "tts-1"}
             className="border-none bg-theme-settings-input-bg border-gray-500 text-white text-sm rounded-lg block w-full p-2.5"
-            onChange={(e) => setSelectedModel(e.target.value)}
+            onChange={(e) => {
+              setSelectedModel(e.target.value);
+              handleChange();
+            }}
           >
             <option value="tts-1">TTS-1</option>
             <option value="tts-1-hd">TTS-1-HD</option>
             <option value="gpt-4o-mini-tts">GPT-4o mini TTS</option>
           </select>
+        </div>
+        <div className="flex flex-col items-end justify-end">
+          <button
+            type="button"
+            id="test-voice-button"
+            onClick={testVoice}
+            className="bg-primary-button hover:bg-primary-button-hover text-white font-bold py-2 px-4 rounded transition-colors"
+          >
+            Test Voice
+          </button>
         </div>
       </div>
       {showInstructions && (
@@ -92,6 +183,7 @@ export default function OpenAiOptions({ settings, workspace }) {
             required={false}
             autoComplete="off"
             spellCheck={false}
+            onChange={handleChange}
           />
           <p className="text-xs leading-[18px] font-base text-white text-opacity-60 mt-2">
             Provide a detailed description of how the voice should sound, including accent, tone, personality, etc. for GPT-4o mini TTS.

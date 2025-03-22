@@ -7,6 +7,9 @@ import ElevenLabsIcon from "@/media/ttsproviders/elevenlabs.png";
 import PiperTTSIcon from "@/media/ttsproviders/piper.png";
 import GenericOpenAiLogo from "@/media/ttsproviders/generic-openai.png";
 
+// Import the OpenAI TTS Options component
+import OpenAiOptions from "./OpenAiOptions";
+
 const PROVIDERS = [
   {
     name: "System default",
@@ -26,15 +29,12 @@ const PROVIDERS = [
     name: "OpenAI",
     value: "openai",
     logo: OpenAiLogo,
-    options: () => (
-      <div className="flex flex-col gap-y-4 mt-4">
-        <div className="text-sm text-white/60">OpenAI TTS settings will be used.</div>
-        <div className="p-4 bg-theme-bg-secondary rounded-md">
-          <div className="text-sm text-white">
-            Configure your workspace-specific OpenAI TTS settings in the next version update.
-          </div>
-        </div>
-      </div>
+    options: (settings, workspace, setHasChanges) => (
+      <OpenAiOptions 
+        settings={settings} 
+        workspace={workspace} 
+        setHasChanges={setHasChanges} 
+      />
     ),
     description: "Use OpenAI's text to speech voices, including customizable GPT-4o TTS.",
   },
@@ -329,7 +329,7 @@ export default function WorkspaceTTSSettings({ settings, workspace, setHasChange
         {selectedProvider &&
           PROVIDERS.find(
             (provider) => provider.value === selectedProvider
-          )?.options()}
+          )?.options(settings, workspace, setHasChanges)}
       </div>
     </div>
   );
