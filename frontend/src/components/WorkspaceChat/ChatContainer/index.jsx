@@ -95,6 +95,35 @@ export default function ChatContainer({ workspace, knownHistory = [] }) {
       .catch((e) => console.error(e));
   };
 
+  const redoAssistantMessage = (chatId) => {
+    // Find the user message and assistant message pair
+    const messagesIndex = chatHistory.findIndex(msg => msg.chatId === chatId && msg.role === "assistant");
+    if (messagesIndex < 0) return;
+    
+    // Get the corresponding user message (should be right before the assistant message)
+    const userMessageIndex = messagesIndex - 1;
+    if (userMessageIndex < 0 || chatHistory[userMessageIndex].role !== "user") return;
+    
+    // Create new history excluding the response being redone
+    const updatedHistory = [
+      ...chatHistory.slice(0, userMessageIndex), // All messages before the user message
+      chatHistory[userMessageIndex], // Include the user message
+      ...chatHistory.slice(messagesIndex + 1) // All messages after the assistant message
+    ];
+    
+    // Delete the specific chat message
+    Workspace.deleteChats(workspace.slug, [chatId])
+      .then(() =>
+        sendCommand(
+          chatHistory[userMessageIndex].content,
+          true,
+          updatedHistory,
+          chatHistory[userMessageIndex]?.attachments
+        )
+      )
+      .catch((e) => console.error(e));
+  };
+
   const sendCommand = async (
     command,
     submit = false,
@@ -276,6 +305,7 @@ export default function ChatContainer({ workspace, knownHistory = [] }) {
             sendCommand={sendCommand}
             updateHistory={setChatHistory}
             regenerateAssistantMessage={regenerateAssistantMessage}
+            redoAssistantMessage={redoAssistantMessage}
             hasAttachments={files.length > 0}
           />
         </MetricsProvider>

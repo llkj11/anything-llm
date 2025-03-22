@@ -1,6 +1,6 @@
 import React, { memo, useState } from "react";
 import useCopyText from "@/hooks/useCopyText";
-import { Check, ThumbsUp, ArrowsClockwise, Copy } from "@phosphor-icons/react";
+import { Check, ThumbsUp, ArrowsClockwise, Copy, ArrowClockwise } from "@phosphor-icons/react";
 import Workspace from "@/models/workspace";
 import { EditMessageAction } from "./EditMessage";
 import RenderMetrics from "./RenderMetrics";
@@ -13,6 +13,7 @@ const Actions = ({
   slug,
   isLastMessage,
   regenerateMessage,
+  redoMessage,
   forkThread,
   isEditing,
   role,
@@ -40,6 +41,13 @@ const Actions = ({
           {isLastMessage && !isEditing && (
             <RegenerateMessage
               regenerateMessage={regenerateMessage}
+              slug={slug}
+              chatId={chatId}
+            />
+          )}
+          {!isLastMessage && role === "assistant" && !isEditing && (
+            <RedoMessage
+              redoMessage={redoMessage}
               slug={slug}
               chatId={chatId}
             />
@@ -136,6 +144,28 @@ function RegenerateMessage({ regenerateMessage, chatId }) {
         aria-label="Regenerate"
       >
         <ArrowsClockwise
+          color="var(--theme-sidebar-footer-icon-fill)"
+          size={20}
+          className="mb-1"
+          weight="fill"
+        />
+      </button>
+    </div>
+  );
+}
+
+function RedoMessage({ redoMessage, chatId }) {
+  if (!chatId) return null;
+  return (
+    <div className="mt-3 relative">
+      <button
+        onClick={() => redoMessage(chatId)}
+        data-tooltip-id="redo-assistant-text"
+        data-tooltip-content="Redo response"
+        className="border-none text-zinc-300"
+        aria-label="Redo"
+      >
+        <ArrowClockwise
           color="var(--theme-sidebar-footer-icon-fill)"
           size={20}
           className="mb-1"

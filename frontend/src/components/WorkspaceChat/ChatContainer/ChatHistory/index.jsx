@@ -23,6 +23,7 @@ export default function ChatHistory({
   sendCommand,
   updateHistory,
   regenerateAssistantMessage,
+  redoAssistantMessage,
   hasAttachments = false,
 }) {
   const { t } = useTranslation();
@@ -148,6 +149,7 @@ export default function ChatHistory({
         workspace,
         history,
         regenerateAssistantMessage,
+        redoAssistantMessage,
         saveEditedMessage,
         forkThread,
         getMessageAlignment,
@@ -156,6 +158,7 @@ export default function ChatHistory({
       workspace,
       history,
       regenerateAssistantMessage,
+      redoAssistantMessage,
       saveEditedMessage,
       forkThread,
     ]
@@ -296,6 +299,7 @@ function buildMessages({
   history,
   workspace,
   regenerateAssistantMessage,
+  redoAssistantMessage,
   saveEditedMessage,
   forkThread,
   getMessageAlignment,
@@ -343,6 +347,7 @@ function buildMessages({
           error={props.error}
           attachments={props.attachments}
           regenerateMessage={regenerateAssistantMessage}
+          redoMessage={redoAssistantMessage}
           isLastMessage={isLastBotReply}
           saveEditedMessage={saveEditedMessage}
           forkThread={forkThread}

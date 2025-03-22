@@ -29,6 +29,7 @@ const HistoricalMessage = ({
   chatId = null,
   isLastMessage = false,
   regenerateMessage,
+  redoMessage,
   saveEditedMessage,
   forkThread,
   metrics = {},
@@ -121,6 +122,7 @@ const HistoricalMessage = ({
             slug={workspace?.slug}
             isLastMessage={isLastMessage}
             regenerateMessage={regenerateMessage}
+            redoMessage={redoMessage}
             isEditing={isEditing}
             role={role}
             forkThread={forkThread}
