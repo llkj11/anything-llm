@@ -72,6 +72,11 @@ export default function OpenAiOptions({ settings, workspace, setHasChanges }) {
             text: "This is a test of the text to speech feature. How does this sound?"
           }),
         });
+        const contentType = response.headers.get("Content-Type");
+        if (!contentType || !contentType.includes("audio")) {
+          const errorText = await response.text();
+          throw new Error(`Expected audio response, got ${contentType}: ${errorText}`);
+        }
         
         if (!response.ok) {
           const errorText = await response.text();
@@ -87,17 +92,20 @@ export default function OpenAiOptions({ settings, workspace, setHasChanges }) {
           throw new Error("Received empty audio data");
         }
         
+        // Create a valid audio blob with the correct type
+        const validAudioBlob = new Blob([audioBlob], { type: 'audio/mpeg' });
+        
         // Create an audio element and play it
         const audioElement = document.getElementById(audioElementId);
-        const audioUrl = URL.createObjectURL(audioBlob);
+        const audioUrl = URL.createObjectURL(validAudioBlob);
         
         // Log what we're trying to play
         console.log("Created audio URL:", audioUrl);
         
         // Set up event handlers
         audioElement.onerror = (e) => {
-          console.error("Audio element error:", e);
-          showToast(`Audio playback error: ${e.target.error?.message || 'Unknown error'}`, "error");
+          console.error("Audio element error:", e, "CurrentSrc:", audioElement.currentSrc);
+          showToast(`Audio playback error: ${e.target.error?.message || 'Unknown error'}. Source: ${audioElement.currentSrc}`, "error");
           resetButton();
         };
         

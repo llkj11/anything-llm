@@ -124,6 +124,11 @@ export default function WorkspaceTTSSettings({ settings, workspace, setHasChange
     setHasChanges(true);
   };
 
+  const handleChange = () => {
+    console.log("TTS settings changed, notifying parent component");
+    setHasChanges(true);
+  };
+
   const handleXButton = (e) => {
     e.stopPropagation();
     if (searchQuery.length > 0) {
@@ -232,7 +237,7 @@ export default function WorkspaceTTSSettings({ settings, workspace, setHasChange
       </p>
       
       <div className="text-base font-bold text-white mb-4">Provider</div>
-      <div className="relative" style={{ marginBottom: "250px" }}>
+      <div className="relative" style={{ marginBottom: "250px" }} onChange={handleChange}>
         <div
           className="h-[48px] px-4 rounded-lg flex items-center justify-between bg-theme-settings-input-bg text-white cursor-pointer text-sm"
           onClick={toggleDropdown}
@@ -331,10 +336,11 @@ export default function WorkspaceTTSSettings({ settings, workspace, setHasChange
           </div>
         )}
 
-        <input 
-          type="hidden" 
-          name="ttsProvider" 
-          value={selectedProvider === null ? "" : selectedProvider} 
+        <input
+          type="hidden"
+          name="ttsProvider"
+          value={selectedProvider || workspace?.ttsProvider || "openai"}
+          onChange={handleChange}
         />
 
         {selectedProvider &&

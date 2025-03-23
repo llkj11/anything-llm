@@ -68,6 +68,17 @@ export default function ChatSettings({ workspace }) {
         if (!data.ttsOpenAiModel) {
           data.ttsOpenAiModel = workspace?.ttsOpenAiModel || 'tts-1';
         }
+        
+        // Handle instructions for GPT-4o
+        if (data.ttsOpenAiModel === 'gpt-4o-mini-tts' && !data.ttsOpenAiInstructions && workspace?.ttsOpenAiInstructions) {
+          data.ttsOpenAiInstructions = workspace.ttsOpenAiInstructions;
+        }
+      }
+      
+      // Manually check if the ttsProvider field exists and process it correctly
+      if (!('ttsProvider' in data) && workspace?.ttsProvider) {
+        console.log("Adding missing ttsProvider from workspace:", workspace.ttsProvider);
+        data.ttsProvider = workspace.ttsProvider;
       }
       
       console.log("Processed data being sent to server:", {...data, ttsOpenAiKey: data.ttsOpenAiKey ? '***' : undefined});
