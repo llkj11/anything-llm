@@ -3,6 +3,7 @@ const { BackgroundService } = require("../BackgroundWorkers");
 const { EncryptionManager } = require("../EncryptionManager");
 const { CommunicationKey } = require("../comKey");
 const setupTelemetry = require("../telemetry");
+const portfinder = require('portfinder');
 
 // Testing SSL? You can make a self signed certificate and point the ENVs to that location
 // make a directory in server called 'sslcert' - cd into it
@@ -11,12 +12,17 @@ const setupTelemetry = require("../telemetry");
 // - rm server.pass.key
 // - openssl req -new -key server.key -out server.csr
 // Update .env keys with the correct values and boot. These are temporary and not real SSL certs - only use for local.
-// Test with https://localhost:3001/api/ping
+// Test with https://localhost:<port>/api/ping
 // build and copy frontend to server/public with correct API_BASE and start server in prod model and all should be ok
-function bootSSL(app, port = 3001) {
+async function bootSSL(app, preferredPort = 3001) {
   try {
+    const actualPort = await portfinder.getPortPromise({ port: preferredPort, stopPort: preferredPort + 100 });
+    if (actualPort !== preferredPort) {
+      console.log(`\x1b[33m[Warning]\x1b[0m Port ${preferredPort} was busy, using ${actualPort} instead.`);
+    }
+
     console.log(
-      `\x1b[33m[SSL BOOT ENABLED]\x1b[0m Loading the certificate and key for HTTPS mode...`
+      `\x1b[33m[SSL BOOT ENABLED]\x1b[0m Loading the certificate and key for HTTPS mode on port ${actualPort}...`
     );
     const fs = require("fs");
     const https = require("https");
@@ -26,14 +32,20 @@ function bootSSL(app, port = 3001) {
     const server = https.createServer(credentials, app);
 
     server
-      .listen(port, async () => {
+      .listen(actualPort, async () => {
         await setupTelemetry();
         new CommunicationKey(true);
         new EncryptionManager();
         new BackgroundService().boot();
-        console.log(`Primary server in HTTPS mode listening on port ${port}`);
+        console.log(`Primary server in HTTPS mode listening on port ${actualPort}`);
       })
-      .on("error", catchSigTerms);
+      .on("error", (err) => {
+        // If listen fails (e.g., EADDRINUSE), portfinder should have prevented it,
+        // but handle other potential errors.
+        console.error(`\x1b[31m[SSL Boot Error]\x1b[0m Failed to listen on port ${actualPort}: ${err.message}`);
+        catchSigTerms(err); // Pass error to handler if needed
+        process.exit(1); // Exit if server can't start
+      });
 
     require("@mintplex-labs/express-ws").default(app, server);
     return { app, server };
@@ -47,24 +59,35 @@ function bootSSL(app, port = 3001) {
         stacktrace: e.stack,
       }
     );
-    return bootHTTP(app, port);
+    // Fallback to HTTP using the original preferred port for searching
+    return await bootHTTP(app, preferredPort);
   }
 }
 
-function bootHTTP(app, port = 3001) {
+async function bootHTTP(app, preferredPort = 3001) {
   if (!app) throw new Error('No "app" defined - crashing!');
+  const actualPort = await portfinder.getPortPromise({ port: preferredPort, stopPort: preferredPort + 100 });
+  if (actualPort !== preferredPort) {
+    console.log(`\x1b[33m[Warning]\x1b[0m Port ${preferredPort} was busy, using ${actualPort} instead.`);
+  }
 
   app
-    .listen(port, async () => {
+    .listen(actualPort, async () => {
       await setupTelemetry();
       new CommunicationKey(true);
       new EncryptionManager();
       new BackgroundService().boot();
-      console.log(`Primary server in HTTP mode listening on port ${port}`);
+      console.log(`Primary server in HTTP mode listening on port ${actualPort}`);
     })
-    .on("error", catchSigTerms);
+    .on("error", (err) => {
+      // If listen fails (e.g., EADDRINUSE), portfinder should have prevented it,
+      // but handle other potential errors.
+      console.error(`\x1b[31m[HTTP Boot Error]\x1b[0m Failed to listen on port ${actualPort}: ${err.message}`);
+      catchSigTerms(err); // Pass error to handler if needed
+      process.exit(1); // Exit if server can't start
+    });
 
-  return { app, server: null };
+  return { app, server: null }; // server is null in HTTP mode as per original logic
 }
 
 function catchSigTerms() {
