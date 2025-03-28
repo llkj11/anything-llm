@@ -4,11 +4,19 @@ import postcss from "./postcss.config.js"
 import react from "@vitejs/plugin-react"
 import dns from "dns"
 import { visualizer } from "rollup-plugin-visualizer"
+import portfinder from 'portfinder';
 
 dns.setDefaultResultOrder("verbatim")
 
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig(async () => {
+  // Find an available port for the dev server, starting from 3000
+  const frontendPort = await portfinder.getPortPromise({
+    port: 3000, // start searching from 3000
+    stopPort: 3999 // stop searching at 3999
+  });
+
+  return {
   assetsInclude: [
     './public/piper/ort-wasm-simd-threaded.wasm',
     './public/piper/piper_phonemize.wasm',
@@ -18,7 +26,7 @@ export default defineConfig({
     format: 'es'
   },
   server: {
-    port: 3000,
+    port: frontendPort, // Use the dynamically found port
     host: "localhost",
     proxy: {
       '/api': {
@@ -90,4 +98,5 @@ export default defineConfig({
       plugins: []
     }
   }
+} // Close the async function wrapper
 })
