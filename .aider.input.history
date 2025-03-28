@@ -289,3 +289,27 @@
 
 # 2025-03-17 10:42:19.760392
 +/ask I already have docker files in this repo was just asking question. Takes a while to build this that's why I was just trying to do the npm stuff but keep having issues. 
+
+# 2025-03-28 18:12:36.562570
++y
+
+# 2025-03-28 18:13:14.163393
++/model gemini
+
+# 2025-03-28 18:15:49.425053
++/weak-model gemini-2.0-flash
+
+# 2025-03-28 18:16:14.614112
++/weak-model gemini/gemini-2.0-flash
+
+# 2025-03-28 18:17:29.972036
++/ask Hello there! What model are you? 
+
+# 2025-03-28 18:17:58.830371
++Can you see the current code repository? 
+
+# 2025-03-28 18:18:14.990717
++Ok do what does this application do? 
+
+# 2025-03-28 18:18:36.959673
++/tokens
