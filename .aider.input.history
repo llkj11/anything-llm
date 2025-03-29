@@ -313,3 +313,28 @@
 
 # 2025-03-28 18:18:36.959673
 +/tokens
+
+# 2025-03-28 18:22:57.291959
++I'm having an issue with one part of the app. Whenever I try to open it I get an error related to a port issue and I have to do the taskkill stuff to clear the port. It's pretty annoying. Is there a way we can make the ports for this dynamic so it automatically finds an empty port for frontend and server? Along with whatever else? 
+
+# 2025-03-28 18:25:32.371914
++n
+
+# 2025-03-28 18:26:08.887007
++I'll run the shell commands on my own, just give me the commands when you have them. So I installed the portfinder and did dev on the frontend and it seems to work. Server still shows this though
+
+# 2025-03-28 18:29:02.131531
++I'll run the shell commands on my own, just give me the commands when you have them. So I installed the portfinder and did de
++diff> v on the frontend and it seems to work. Server still shows this though
+
+# 2025-03-28 18:29:37.959795
++/add server/utils/boot/index.js
+
+# 2025-03-28 18:30:50.179649
++I have added the file
+
+# 2025-03-28 18:42:35.489915
++n
+
+# 2025-03-28 18:43:29.820698
++Alright so that seems to work! I'll merge the branches later. The next issue....whenever I click the speaker button to the left of the model response it just shows a slash through the speaker but doesn't actually play the tts. 

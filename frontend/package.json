@@ -65,6 +65,7 @@
     "flow-remove-types": "^2.217.1",
     "globals": "^13.21.0",
     "hermes-eslint": "^0.15.0",
+    "portfinder": "^1.0.35",
     "postcss": "^8.4.23",
     "prettier": "^3.0.3",
     "rollup-plugin-visualizer": "^5.9.0",
