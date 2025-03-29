@@ -71,7 +71,7 @@ async function bootHTTP(app, preferredPort = 3001) {
     console.log(`\x1b[33m[Warning]\x1b[0m Port ${preferredPort} was busy, using ${actualPort} instead.`);
   }
 
-  app
+  const server = app
     .listen(actualPort, async () => {
       await setupTelemetry();
       new CommunicationKey(true);
@@ -87,18 +87,13 @@ async function bootHTTP(app, preferredPort = 3001) {
       process.exit(1); // Exit if server can't start
     });
 
-  return { app, server: null }; // server is null in HTTP mode as per original logic
+  return { app, server }; // Return both app and server
 }
 
-function catchSigTerms() {
-  process.once("SIGUSR2", function () {
-    Telemetry.flush();
-    process.kill(process.pid, "SIGUSR2");
-  });
-  process.on("SIGINT", function () {
-    Telemetry.flush();
-    process.kill(process.pid, "SIGINT");
-  });
+// Handle termination signals
+function catchSigTerms(err) {
+  console.error(err);
+  process.exit(1);
 }
 
 module.exports = {

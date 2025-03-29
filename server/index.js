@@ -27,8 +27,16 @@ const { experimentalEndpoints } = require("./endpoints/experimental");
 const { browserExtensionEndpoints } = require("./endpoints/browserExtension");
 const { communityHubEndpoints } = require("./endpoints/communityHub");
 const { agentFlowEndpoints } = require("./endpoints/agentFlows");
+const { autoMigrateDatabaseIfNeeded } = require("./utils/autoDatabaseMigrate");
 
 (async () => { // Start Async IIFE
+// Auto-migrate database if needed before starting the server
+try {
+  await autoMigrateDatabaseIfNeeded();
+} catch (error) {
+  console.error('Database auto-migration failed:', error);
+  // Continue server startup even if migration fails
+}
 
 const app = express();
 const apiRouter = express.Router();
@@ -50,6 +58,7 @@ if (!!process.env.ENABLE_HTTPS) {
   await bootSSL(app, preferredPort);
 } else {
   require("@mintplex-labs/express-ws").default(app); // load WebSockets in non-SSL mode.
+  await bootHTTP(app, preferredPort);
 }
 
 app.use("/api", apiRouter);
@@ -75,67 +84,10 @@ embeddedEndpoints(apiRouter);
 // Externally facing browser extension endpoints
 browserExtensionEndpoints(apiRouter);
 
-if (process.env.NODE_ENV !== "development") {
-  const { MetaGenerator } = require("./utils/boot/MetaGenerator");
-  const IndexPage = new MetaGenerator();
-
-  app.use(
-    express.static(path.resolve(__dirname, "public"), {
-      extensions: ["js"],
-      setHeaders: (res) => {
-        // Disable I-framing of entire site UI
-        res.removeHeader("X-Powered-By");
-        res.setHeader("X-Frame-Options", "DENY");
-      },
-    })
-  );
-
-  app.use("/", function (_, response) {
-    IndexPage.generate(response);
-    return;
-  });
-
-  app.get("/robots.txt", function (_, response) {
-    response.type("text/plain");
-    response.send("User-agent: *\nDisallow: /").end();
-  });
-} else {
-  // Debug route for development connections to vectorDBs
-  apiRouter.post("/v/:command", async (request, response) => {
-    try {
-      const VectorDb = getVectorDbClass();
-      const { command } = request.params;
-      if (!Object.getOwnPropertyNames(VectorDb).includes(command)) {
-        response.status(500).json({
-          message: "invalid interface command",
-          commands: Object.getOwnPropertyNames(VectorDb),
-        });
-        return;
-      }
-
-      try {
-        const body = reqBody(request);
-        const resBody = await VectorDb[command](body);
-        response.status(200).json({ ...resBody });
-      } catch (e) {
-        // console.error(e)
-        console.error(JSON.stringify(e));
-        response.status(500).json({ error: e.message });
-      }
-      return;
-    } catch (e) {
-      console.error(e.message, e);
-      response.sendStatus(500).end();
-    }
-  });
-}
-
-app.all("*", function (_, response) {
-  response.sendStatus(404);
+// Handle React routing, return all requests to React app if not API request
+app.use(express.static(path.join(__dirname, "public")));
+app.get("*", function (_, res) {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
 });
-
-// In non-https mode we need to boot at the end since the server has not yet
-// started and is `.listen`ing.
-if (!process.env.ENABLE_HTTPS) await bootHTTP(app, preferredPort);
 
 })(); // End Async IIFE
