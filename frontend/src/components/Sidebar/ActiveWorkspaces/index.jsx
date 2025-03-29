@@ -6,14 +6,14 @@ import ManageWorkspace, {
   useManageWorkspaceModal,
 } from "../../Modals/ManageWorkspace";
 import paths from "@/utils/paths";
-import { useParams } from "react-router-dom";
+import { useParams, Link, useMatch, useNavigate } from "react-router-dom";
 import { GearSix, SquaresFour, UploadSimple } from "@phosphor-icons/react";
 import useUser from "@/hooks/useUser";
 import ThreadContainer from "./ThreadContainer";
-import { Link, useMatch } from "react-router-dom";
 
 export default function ActiveWorkspaces() {
   const { slug } = useParams();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [workspaces, setWorkspaces] = useState([]);
   const [selectedWs, setSelectedWs] = useState(null);
@@ -55,14 +55,19 @@ export default function ActiveWorkspaces() {
             role="listitem"
           >
             <div className="flex gap-x-2 items-center justify-between">
-              <div
+              <div 
                 className={`
                   transition-all duration-[200ms]
-                  flex flex-grow w-[75%] gap-x-2 py-[6px] px-[12px] rounded-[4px] text-white justify-start items-center
+                  flex flex-grow w-[75%] gap-x-2 py-[6px] px-[12px] rounded-[4px] text-white justify-start items-center cursor-pointer
                   bg-theme-sidebar-item-default
                   hover:bg-theme-sidebar-subitem-hover hover:font-bold
                   ${isActive ? "bg-theme-sidebar-item-selected font-bold border-solid border-2 border-transparent light:border-blue-400" : ""}
                 `}
+                onClick={(e) => {
+                  if (!e.target.closest('button, a')) { 
+                    navigate(paths.workspace.chat(workspace.slug));
+                  }
+                }}
               >
                 <div className="flex flex-row justify-between w-full">
                   <div className="flex items-center space-x-2 overflow-hidden">

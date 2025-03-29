@@ -604,7 +604,8 @@ function workspaceEndpoints(app) {
         const cachedResponse = responseCache.get(cacheKey);
         if (cachedResponse) {
           response.writeHead(200, {
-            "Content-Type": cachedResponse.mime || "audio/mpeg",
+            'Content-Type': cachedResponse.mime || "audio/mpeg",
+            'Content-Length': cachedResponse.buffer.length
           });
           response.end(cachedResponse.buffer);
           return;
@@ -619,8 +620,10 @@ function workspaceEndpoints(app) {
         if (buffer === null) return response.sendStatus(204).end();
 
         responseCache.set(cacheKey, { buffer, mime: "audio/mpeg" });
+
         response.writeHead(200, {
-          "Content-Type": "audio/mpeg",
+          'Content-Type': 'audio/mpeg',
+          'Content-Length': buffer.length
         });
         response.end(buffer);
         return;
@@ -640,10 +643,8 @@ function workspaceEndpoints(app) {
         const cachedResponse = responseCache.get(slug);
 
         if (cachedResponse) {
-          response.writeHead(200, {
-            "Content-Type": cachedResponse.mime || "image/png",
-          });
-          response.end(cachedResponse.buffer);
+          response.contentType(cachedResponse.mime || "image/png");
+          response.send(cachedResponse.buffer);
           return;
         }
 
@@ -662,10 +663,8 @@ function workspaceEndpoints(app) {
 
         responseCache.set(slug, { buffer, mime });
 
-        response.writeHead(200, {
-          "Content-Type": mime || "image/png",
-        });
-        response.end(buffer);
+        response.contentType(mime || "image/png");
+        response.send(buffer);
         return;
       } catch (error) {
         console.error("Error processing the logo request:", error);

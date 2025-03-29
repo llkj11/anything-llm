@@ -72,7 +72,7 @@ export default {
     thread: (wsSlug, threadSlug) => {
       return `/workspace/${wsSlug}/t/${threadSlug}`;
     },
-    tts: (slug, chatId) => `/workspace/${slug}/tts/${chatId}`,
+    tts: (slug, chatId) => `/api/workspace/${slug}/tts/${chatId}`,
   },
   apiDocs: () => {
     return `${API_BASE}/docs`;
@@ -187,5 +187,5 @@ export default {
   },
 
   // TTS paths
-  tts: (chatId) => `/tts/${chatId}`,
+  tts: (chatId) => `/api/tts/${chatId}`,
 };
