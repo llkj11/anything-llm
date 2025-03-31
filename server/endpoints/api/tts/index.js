@@ -38,6 +38,7 @@ function ttsEndpoints(app) {
         switch (provider) {
           case "openai":
             const { key, voice, model, instructions } = params;
+            console.log("Test TTS API - Received OpenAI params:", { provider, key: key ? '***' : 'undefined/empty', voice, model, instructions: instructions ? `length: ${instructions.length}` : 'undefined/empty' });
             console.log("Creating OpenAI TTS provider with settings:", {
               key: key ? "***" : "not provided",
               voice,

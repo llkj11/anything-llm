@@ -1,6 +1,7 @@
 import { useState } from "react";
 import showToast from "@/utils/toast";
 import System from "@/models/system";
+import { Eye, EyeSlash } from "@phosphor-icons/react";
 
 function toProperCase(string) {
   return string.replace(/\w\S*/g, function (txt) {
@@ -15,6 +16,7 @@ export default function OpenAiOptions({ settings, workspace, setHasChanges }) {
   );
   const [instructionsExpanded, setInstructionsExpanded] = useState(false);
   const showInstructions = selectedModel === "gpt-4o-mini-tts";
+  const [showKey, setShowKey] = useState(false);
   
   // Track form changes
   const handleChange = () => {
@@ -179,17 +181,30 @@ export default function OpenAiOptions({ settings, workspace, setHasChanges }) {
           <label className="text-white text-sm font-semibold block mb-3">
             API Key
           </label>
-          <input
-            type="password"
-            name="ttsOpenAiKey"
-            className="border-none bg-theme-settings-input-bg text-white placeholder:text-theme-settings-input-placeholder text-sm rounded-lg focus:outline-primary-button active:outline-primary-button outline-none block w-full p-2.5"
-            placeholder="OpenAI API Key"
-            defaultValue={apiKey ? "*".repeat(20) : ""}
-            required={false}
-            autoComplete="off"
-            spellCheck={false}
-            onChange={handleChange}
-          />
+          <div className="relative w-full">
+            <input
+              type={showKey ? "text" : "password"}
+              name="ttsOpenAiKey"
+              className="border-none bg-theme-settings-input-bg text-white placeholder:text-theme-settings-input-placeholder text-sm rounded-lg focus:outline-primary-button active:outline-primary-button outline-none block w-full p-2.5 pr-10"
+              placeholder="OpenAI API Key"
+              defaultValue={apiKey}
+              required={false}
+              autoComplete="off"
+              spellCheck={false}
+              onChange={handleChange}
+            />
+            <button
+              type="button"
+              onClick={() => setShowKey(!showKey)}
+              className="absolute inset-y-0 right-0 px-3 flex items-center text-gray-400 hover:text-gray-200"
+            >
+              {showKey ? (
+                <EyeSlash size={20} />
+              ) : (
+                <Eye size={20} />
+              )}
+            </button>
+          </div>
         </div>
         <div className="flex flex-col w-60">
           <label className="text-white text-sm font-semibold block mb-3">

@@ -4,6 +4,9 @@ class OpenAiTTS {
   constructor(workspace = null) {
     // Use workspace-specific settings if available, otherwise use global settings
     const apiKey = workspace?.ttsOpenAiKey || process.env.TTS_OPEN_AI_KEY;
+    // Added logging for constructor initialization
+    console.log('OpenAiTTS Constructor - Initializing with workspace:', workspace ? Object.keys(workspace).filter(k => k.startsWith('tts') || k === 'id' || k === 'name') : 'null');
+    console.log(`OpenAiTTS Constructor - Resolved API Key: ${apiKey ? '***' : 'Not Found'}`);
     if (!apiKey) throw new Error("No OpenAI API key was set.");
     
     this.openai = new OpenAI({
@@ -14,6 +17,8 @@ class OpenAiTTS {
     this.voice = workspace?.ttsOpenAiVoiceModel || process.env.TTS_OPEN_AI_VOICE_MODEL || "alloy";
     this.model = workspace?.ttsOpenAiModel || process.env.TTS_OPEN_AI_MODEL || "tts-1";
     this.instructions = workspace?.ttsOpenAiInstructions || process.env.TTS_OPEN_AI_INSTRUCTIONS || null;
+    // Added logging for final values
+    console.log(`OpenAiTTS Constructor - Final settings: model=${this.model}, voice=${this.voice}, instructions?=${!!this.instructions}`);
   }
 
   /**
