@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import showToast from "@/utils/toast";
 import System from "@/models/system";
-import { Eye, EyeSlash } from "@phosphor-icons/react";
+import { Eye, EyeSlash, Sparkle } from "@phosphor-icons/react";
 
 function toProperCase(string) {
   return string.replace(/\w\S*/g, function (txt) {
@@ -17,6 +17,8 @@ export default function OpenAiOptions({ settings, workspace, setHasChanges }) {
   const [instructionsExpanded, setInstructionsExpanded] = useState(false);
   const showInstructions = selectedModel === "gpt-4o-mini-tts";
   const [showKey, setShowKey] = useState(false);
+  const [isEnhancing, setIsEnhancing] = useState(false);
+  const instructionsRef = useRef(null);
   
   // Track form changes
   const handleChange = () => {
@@ -174,6 +176,46 @@ export default function OpenAiOptions({ settings, workspace, setHasChanges }) {
     }
   };
 
+  const enhanceInstructions = async () => {
+    if (!instructionsRef.current) return;
+    const currentInstructions = instructionsRef.current.value;
+    if (!currentInstructions) {
+      showToast("Please provide some initial instructions to enhance.", "warning");
+      return;
+    }
+
+    setIsEnhancing(true);
+    try {
+      const response = await fetch("/api/tts/enhance-instructions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-anythingllm-auth": localStorage.getItem("authToken") || "",
+        },
+        body: JSON.stringify({ instructions: currentInstructions }),
+      });
+
+      if (!response.ok) {
+        const errorResult = await response.json();
+        throw new Error(errorResult.message || `HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      if (result.enhancedInstructions && instructionsRef.current) {
+        instructionsRef.current.value = result.enhancedInstructions;
+        showToast("Instructions enhanced successfully!", "success");
+        if (setHasChanges) setHasChanges(true);
+      } else {
+        throw new Error("Failed to get enhanced instructions from response.");
+      }
+    } catch (error) {
+      console.error("Error enhancing TTS instructions:", error);
+      showToast(`Error: ${error.message}`, "error");
+    } finally {
+      setIsEnhancing(false);
+    }
+  };
+
   return (
     <div className="flex flex-col gap-y-4 mt-1.5">
       <div className="flex gap-[36px]">
@@ -281,10 +323,27 @@ export default function OpenAiOptions({ settings, workspace, setHasChanges }) {
             autoComplete="off"
             spellCheck={false}
             onChange={handleChange}
+            ref={instructionsRef}
           />
           <p className="text-xs leading-[18px] font-base text-white text-opacity-60 mt-2">
             Provide a detailed description of how the voice should sound, including accent, tone, personality, etc. for GPT-4o mini TTS.
           </p>
+          <button
+            type="button"
+            disabled={isEnhancing}
+            onClick={enhanceInstructions}
+            className="mt-2 w-fit bg-secondary-button hover:bg-secondary-button-hover text-white font-bold py-1 px-3 rounded text-sm inline-flex items-center gap-x-1 transition-colors disabled:opacity-50"
+          >
+            {isEnhancing ? (
+              <>
+                <Sparkle className="animate-pulse" size={16} /> Enhancing...
+              </>
+            ) : (
+              <>
+                <Sparkle size={16} /> Enhance Instructions
+              </>
+            )}
+          </button>
         </div>
       )}
     </div>

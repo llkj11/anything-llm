@@ -40,6 +40,9 @@ const GeneralTranscriptionPreference = lazy(
 const GeneralAudioPreference = lazy(
   () => import("@/pages/GeneralSettings/AudioPreference")
 );
+const EnhancementProviderPreference = lazy(
+  () => import("@/pages/GeneralSettings/EnhancementProvider")
+);
 const GeneralEmbeddingPreference = lazy(
   () => import("@/pages/GeneralSettings/EmbeddingPreference")
 );
@@ -123,6 +126,10 @@ export default function App() {
                   <Route
                     path="/settings/audio-preference"
                     element={<AdminRoute Component={GeneralAudioPreference} />}
+                  />
+                  <Route
+                    path="/settings/tts-enhancement-preference"
+                    element={<AdminRoute Component={EnhancementProviderPreference} />}
                   />
                   <Route
                     path="/settings/embedding-preference"

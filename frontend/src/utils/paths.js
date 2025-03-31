@@ -99,6 +99,9 @@ export default {
     audioPreference: () => {
       return "/settings/audio-preference";
     },
+    ttsEnhancementPreference: () => {
+      return "/settings/tts-enhancement-preference";
+    },
     embedder: {
       modelPreference: () => "/settings/embedding-preference",
       chunkingPreference: () => "/settings/text-splitter-preference",

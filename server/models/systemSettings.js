@@ -266,6 +266,14 @@ const SystemSettings = {
       TtsGpt4oFormat: process.env.TTS_GPT4O_FORMAT || "mp3",
       TtsGpt4oInstructions: process.env.TTS_GPT4O_INSTRUCTIONS || "",
 
+      // TTS Enhancement Provider Settings
+      TtsEnhanceProvider: process.env.TTS_ENHANCE_PROVIDER || null,
+      TtsEnhanceModelPref: process.env.TTS_ENHANCE_MODEL_PREF || null,
+      TtsEnhanceApiKey: !!process.env.TTS_ENHANCE_API_KEY,
+      TtsEnhanceBasePath: process.env.TTS_ENHANCE_BASE_PATH || null,
+      TtsEnhanceTokenLimit: process.env.TTS_ENHANCE_MODEL_TOKEN_LIMIT || null,
+      TtsEnhanceMaxTokens: process.env.TTS_ENHANCE_MAX_TOKENS || null,
+
       // --------------------------------------------------------
       // Agent Settings & Configs
       // --------------------------------------------------------

@@ -9,6 +9,7 @@ const { apiUserManagementEndpoints } = require("./userManagement");
 const { apiOpenAICompatibleEndpoints } = require("./openai");
 const { apiEmbedEndpoints } = require("./embed");
 const { ttsEndpoints } = require("./tts");
+const { ttsEnhanceEndpoints } = require("./tts/enhance");
 
 // All endpoints must be documented and pass through the validApiKey Middleware.
 // How to JSDoc an endpoint
@@ -26,6 +27,7 @@ function developerEndpoints(app, router) {
   apiOpenAICompatibleEndpoints(router);
   apiEmbedEndpoints(router);
   ttsEndpoints(router);
+  ttsEnhanceEndpoints(router);
 }
 
 module.exports = { developerEndpoints };
